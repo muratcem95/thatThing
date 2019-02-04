@@ -1,0 +1,6 @@
+.hidden {
+    display: none;
+}
+#eventName:hover {
+    cursor: pointer;
+}

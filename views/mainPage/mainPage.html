@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+        <link rel="stylesheet" type="text/css" href="mainPage.css">
+        
+        <title>That Thing | Main Page</title>
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="/mainPage">TT</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <form class="form-inline my-2 my-lg-0">
+                    <select class="form-control mr-sm-2" id="exampleFormControlSelect1">
+                        <option hidden>Potential Job Positions</option>
+                        <option>Waiter/Waitress</option>
+                        <option>Bartender</option>
+                        <option>Cook</option>
+                        <option>Dish Washer</option>
+                    </select>
+                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                </form>
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item dropdown active">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria- haspopup="true" aria-expanded="false">
+                            Sign Up
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" data-toggle="modal" href="" data-target="#businessSignUp">Business</a>
+                            <a class="dropdown-item" data-toggle="modal" href="" data-target="#employeeSignUp">Employee</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" data-toggle="modal" href="" data-target="#adminSignUp">Admin</a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria- haspopup="true" aria-expanded="false">
+                            Log In
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" data-toggle="modal" href="" data-target="#employeeLogIn">Employee</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" data-toggle="modal" href="" data-target="#adminLogIn">Admin</a>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/aboutUs">About Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/contactUs">Contact Us</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        
+        <div class="jumbotron text-center">
+            <h1 class="display-4">THAT THING</h1>
+            <p class="lead">Finally, you can experience That Thing... buy That Thing...</p>
+            <hr class="my-4">
+            <p>Work during your free time to have a better life.</p>
+            <div class="dropdown">
+                <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Sign Up
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" data-toggle="modal" href="" data-target="#businessSignUp">Business</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" data-toggle="modal" href="" data-target="#employeeSignUp">Employee</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="container">
+            <h5>Potential Job Opportunities</h5>
+        </div>
+        
+        <div class="jumbotron text-center">
+            <p class="lead">THAT THING</p>
+            <p>Contact us at: +1 647 970 8236 | thatThing@gmail.com</p>
+        </div>
+        
+        <!-- Modal Business Sign Up -->
+        <div class="modal fade" id="businessSignUp" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalCenterTitle">Business Sign Up</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Please contact us to be in business with us.</p>
+                        <p><b>Contact info: +1 647 970 8236</b></p>
+                    </div>                 
+                </div>
+            </div>
+        </div>
+        
+        <!-- Modal Employee Sign Up -->
+        <div class="modal fade" id="employeeSignUp" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalCenterTitle">Employee Sign Up</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="post" action="/employeeSignUp">
+                            <div class="form-group">
+                                <input type="email" class="form-control" id="employeeSignUpEmail" name="employeeSignUpEmail" placeholder="Enter email">
+                            </div>
+                            <div class="form-group">
+                                <input type="password" class="form-control" id="employeeSignUpPassword" name="employeeSignUpPassword" placeholder="Password">
+                            </div>
+                            <hr>
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-success">Sign Up</button>
+                            </div>
+                        </form>
+                    </div>                 
+                </div>
+            </div>
+        </div>
+        
+        <!-- Modal Admin Sign Up -->
+        <div class="modal fade" id="adminSignUp" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalCenterTitle">Admin Sign Up</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="post" action="/adminSignUp">
+                            <div class="form-group">
+                                <input type="email" class="form-control" id="adminSignUpEmail" name="adminSignUpEmail" placeholder="Enter email">
+                            </div>
+                            <div class="form-group">
+                                <input type="password" class="form-control" id="adminSignUpPassword" name="adminSignUpPassword" placeholder="Password">
+                            </div>
+                            <hr>
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-success">Sign Up</button>
+                            </div>
+                        </form>
+                    </div>                 
+                </div>
+            </div>
+        </div>
+        
+        <!-- Modal Admin Log In -->
+        <div class="modal fade" id="adminLogIn" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalCenterTitle">Admin Log In</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="post" action="/adminLogIn">
+                            <div class="form-group">
+                                <input type="email" class="form-control" id="adminLogInEmail" name="adminLogInEmail" placeholder="Enter email">
+                            </div>
+                            <div class="form-group">
+                                <input type="password" class="form-control" id="adminLogInPassword" name="adminLogInPassword" placeholder="Password">
+                            </div>
+                            <hr>
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-success">Log In</button>
+                            </div>
+                        </form>
+                    </div>                 
+                </div>
+            </div>
+        </div>
+        
+        <!-- Modal Employee Log In -->
+        <div class="modal fade" id="employeeLogIn" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalCenterTitle">Employee Log In</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="post" action="/employeeLogIn">
+                            <div class="form-group">
+                                <input type="email" class="form-control" id="employeeLogInEmail" name="employeeLogInEmail" placeholder="Enter email">
+                            </div>
+                            <div class="form-group">
+                                <input type="password" class="form-control" id="employeeLogInPassword" name="employeeLogInPassword" placeholder="Password">
+                            </div>
+                            <hr>
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-success">Log In</button>
+                            </div>
+                        </form>
+                    </div>                 
+                </div>
+            </div>
+        </div>
+        
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+        <script src="/socket.io/socket.io.js"></script>
+        <script src="mainPage.js" type="text/javascript"></script>
+    </body>
+</html>
+
+
+
+
+
+                  
+                            
+                            
+                            
+                            
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                  
