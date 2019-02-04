@@ -33,6 +33,11 @@ const EmployerSchema = new mongoose.Schema({
         trim: true,
         required: true
     },
+    address: {
+        type: String,
+        trim: true,
+        required: true
+    },
     notes: {
         type: String,
         default: null

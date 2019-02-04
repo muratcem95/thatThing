@@ -5,9 +5,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
         <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
-        <link rel="stylesheet" type="text/css" href="/admin/home/upcomingEvents/upcomingEvents.css">
+        <link rel="stylesheet" type="text/css" href="/admin/searchEmployees/searchEmployees.css">
         
-        <title>That Thing | Home</title>
+        <title>That Thing | Search Employees</title>
     </head>
     <body>
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -18,10 +18,10 @@
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <form class="form-inline my-2 my-lg-0" method="get" action="/admin/searchEmployees">
-                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search Employees</button>
+                    <button class="btn btn-success my-2 my-sm-0" type="submit">Search Employees</button>
                 </form>
                 <ul class="navbar-nav ml-auto">
-                    <li class="nav-item active">
+                    <li class="nav-item">
                         <a class="nav-link" href="/admin/home/upcomingEvents">Home</a>
                     </li>
                     <li class="nav-item">
@@ -45,7 +45,7 @@
                 <a class="nav-link" href="/admin/home/createEvent">Create Event</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/admin/home/upcomingEvents"><b>Upcoming Events</b></a>
+                <a class="nav-link" href="/admin/home/upcomingEvents">Upcoming Events</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="/admin/home/pastEvents">Past Events</a>
@@ -57,27 +57,30 @@
                 <thead>
                     <tr>
                         <th scope="col">Id</th>
-                        <th scope="col">Event name</th>
-                        <th scope="col">Employer name</th>
-                        <th scope="col">Date</th>
-                        <th scope="col">Job Position</th>
-                        <th scope="col">Notes</th>
-                        <th scope="col">Quota</th>
-                        <th scope="col">Delete</th>
+                        <th scope="col">Profile Image</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Linkedin</th>
+                        <th scope="col">Email</th>
+<!--                        <th scope="col">Phone</th>-->
+                        <th scope="col">Birthdate</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Resume</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {{#each events}}
+                    {{#each employees}}
                         <tr>
                             <td>{{_id}}</td>
-                            {{#if full}}
-                                <th id="eventName" scope="row" data-toggle="modal" data-target="#myModal" data-name="{{name}}" data-employername="{{creator}}" data-email="{{email}}" data-phone="{{phone}}" data-date="{{date}}" data-address="{{address}}" data-postalcode="{{postalCode}}" data-jobposition="{{jobPosition}}" data-description="{{description}}" data-notes="{{notes}}" data-full="{{full}}">{{name}}</th>
-                            {{else}}
-                                <th id="eventName" scope="row" data-toggle="modal" data-target="#myModal" data-name="{{name}}" data-employername="{{creator}}" data-email="{{email}}" data-phone="{{phone}}" data-date="{{date}}" data-address="{{address}}" data-postalcode="{{postalCode}}" data-jobposition="{{jobPosition}}" data-description="{{description}}" data-notes="{{notes}}" data-full="{{full}}" style="color: red;">{{name}}</th>
-                            {{/if}}
-                            <td>{{creator}}</td>
-                            <td>{{date}}</td>
-                            <td>{{jobPosition}}</td>
+<!--                            <th id="eventName" scope="row" data-toggle="modal" data-target="#myModal" data-name="{{name}}" data-employername="{{creator}}" data-email="{{email}}" data-phone="{{phone}}" data-date="{{date}}" data-address="{{address}}" data-postalcode="{{postalCode}}" data-jobposition="{{jobPosition}}" data-description="{{description}}" data-notes="{{notes}}" data-full="{{full}}">{{name}}</th>-->
+                            <td><img src="../../employee/myAccount/uploads/profileImage/{{profileImage}}" width="100px;" height="auto"></td>
+                            <td>{{name}}</td>
+                            <td>{{linkedin}}</td>
+                            <td>{{email}}</td>
+<!--                            <td>{{Phone}}</td>-->
+                            <td>{{birthdate}}</td>
+                            <td>{{description}}</td>
+                            <td><embed src="../../employee/myAccount/uploads/resume/{{resume}}" type="application/pdf" width="100px" height="auto"/></td>
+<!--
                             <td>
                                 <form method="post" action="/admin/home/upcomingEventsNotesForm">    
                                     <input name="eventId" value="{{_id}}" hidden>
@@ -103,6 +106,7 @@
                                     <button type="submit" class="btn btn-sm btn-danger">Delete</button> 
                                 </form>  
                             </td>
+-->
                         </tr>
                     {{/each}}
                 </tbody>

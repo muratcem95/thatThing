@@ -17,7 +17,7 @@
             </button>
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <form class="form-inline my-2 my-lg-0">
+                <form class="form-inline my-2 my-lg-0" method="get" action="/admin/searchEmployees">
                     <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search Employees</button>
                 </form>
                 <ul class="navbar-nav ml-auto">
@@ -56,6 +56,7 @@
             <table class="table table-hover text-center" id="example" class="display">
                 <thead>
                     <tr>
+                        <th scope="col">Id</th>
                         <th scope="col">Event name</th>
                         <th scope="col">Employer name</th>
                         <th scope="col">Date</th>
@@ -68,6 +69,7 @@
                 <tbody>
                     {{#each events}}
                         <tr>
+                            <td>{{id}}</td>
                             {{#if full}}
                                 <th id="eventName" scope="row" data-toggle="modal" data-target="#myModal" data-name="{{name}}" data-employername="{{creator}}" data-email="{{email}}" data-phone="{{phone}}" data-date="{{date}}" data-address="{{address}}" data-postalcode="{{postalCode}}" data-jobposition="{{jobPosition}}" data-description="{{description}}" data-notes="{{notes}}" data-full="{{full}}">{{name}}</th>
                             {{else}}

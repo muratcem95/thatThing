@@ -21,6 +21,7 @@ const {Employee} = require('./models/employee');
 const {EmployeeDetail} = require('./models/employeeDetail');
 const {Event} = require('./models/event');
 const {EmployeeInterest} = require('./models/employeeInterest');
+const {EmployeeAccept} = require('./models/employeeAccept');
 
 const viewsPath = path.join(__dirname, '../views');
 const port = process.env.PORT || 3000;
@@ -59,6 +60,24 @@ app.use(bodyParser.json());
 
 app.get('/mainPage', (req, res) => {
     res.render('mainPage/mainPage.html');
+});
+
+app.post('/mainPageBusinessForm', (req, res) => {
+    var mailOptions = {
+            from: req.body.email,
+            to: 'muratcem95@gmail.com',
+            subject: 'A business is interest to work with me :)!',
+            text: 'Business name: '+req.body.name+'; BRN: '+req.body.brn+'; Email: '+req.body.email+'; Phone: '+req.body.phone+'; Address: '+req.body.address+'.'
+        };
+
+        transporter.sendMail(mailOptions, function(error, info){
+            if (error) {
+                console.log(error);
+            } else {
+                console.log('Email sent: ' + info.response);
+                res.redirect('/mainPage');
+            }
+        });
 });
 
 app.post('/adminSignUp', (req, res) => {
@@ -105,6 +124,7 @@ app.post('/admin/home/createEmployerForm', authenticateAdmin, (req, res) => {
         brn: req.body.brn,
         email: req.body.email,
         phone: req.body.phone,
+        address: req.body.address,
         notes: req.body.notes
     });
     employer.save().then(() => res.redirect('/admin/home/upcomingEvents')).catch((e) => res.status(400).send(e));
@@ -310,6 +330,16 @@ app.post('/admin/home/pastEventsDeleteEventForm', authenticateAdmin, (req, res) 
     }).then(() => res.redirect('/admin/home/pastEvents')).catch((e) => res.send("Can not Event.findByIdAndDelete"));
 });
 
+app.get('/admin/searchEmployees', authenticateAdmin, (req, res) => {
+    var sessAdmin = req.session.admin;
+    
+    EmployeeDetail.find().populate('_creator').then((employees) => {
+        console.log(employees);
+        
+        res.render('admin/searchEmployees/searchEmployees.html', {employees});
+    }).catch((e) => res.send(e));
+});
+
 
 
 app.post('/employeeSignUp', (req, res) => {
@@ -343,9 +373,20 @@ app.get('/employeeLogOut', authenticateEmployee, (req, res) => {
 });
 
 app.get('/employee/home/upcomingEvents', authenticateEmployee, (req, res) => {
-    var sessEmployee = req.session.employee;    
+    var sessEmployee = req.session.employee; 
     
-    res.render('employee/home/upcomingEvents/upcomingEvents.html', {sessEmployee});
+    EmployeeAccept.find({
+        _employee: sessEmployee._id
+    }).populate('_event').then((events) => {
+        eventsObj = [];
+        
+        for (var i = 0; i < events.length; i++) { 
+            var eventObj = events[i]._event[0];
+            eventsObj.push(eventObj);
+        };
+        
+        res.render('employee/home/upcomingEvents/upcomingEvents.html', {sessEmployee, eventsObj});
+    }).catch((e) => res.send(e));
 });
 
 app.get('/employee/home/interestedEvents', authenticateEmployee, (req, res) => {
@@ -360,8 +401,6 @@ app.get('/employee/home/interestedEvents', authenticateEmployee, (req, res) => {
             var eventObj = events[i]._event[0];
             eventsObj.push(eventObj);
         };
-        
-        console.log(eventsObj);
         
         res.render('employee/home/interestedEvents/interestedEvents.html', {sessEmployee, eventsObj});
     }).catch((e) => res.send(e));

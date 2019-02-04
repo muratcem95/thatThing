@@ -40,9 +40,10 @@ const EmployeeDetailSchema = new mongoose.Schema({
         trim: true,
         default: null
     },
-    _creator: {
-        type: mongoose.Schema.Types.ObjectId
-    }
+    _creator: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'employees'
+    }]
 });
 
 const EmployeeDetail = mongoose.model('employeeDetails', EmployeeDetailSchema);
