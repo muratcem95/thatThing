@@ -64,20 +64,20 @@ app.get('/mainPage', (req, res) => {
 
 app.post('/mainPageBusinessForm', (req, res) => {
     var mailOptions = {
-            from: req.body.email,
-            to: 'muratcem95@gmail.com',
-            subject: 'A business is interest to work with me :)!',
-            text: 'Business name: '+req.body.name+'; BRN: '+req.body.brn+'; Email: '+req.body.email+'; Phone: '+req.body.phone+'; Address: '+req.body.address+'.'
-        };
+        from: req.body.email,
+        to: 'muratcem95@gmail.com',
+        subject: 'A business is interest to work with me :)!',
+        text: 'Business name: '+req.body.name+'; BRN: '+req.body.brn+'; Email: '+req.body.email+'; Phone: '+req.body.phone+'; Address: '+req.body.address+'.'
+    };
 
-        transporter.sendMail(mailOptions, function(error, info){
-            if (error) {
-                console.log(error);
-            } else {
-                console.log('Email sent: ' + info.response);
-                res.redirect('/mainPage');
-            }
-        });
+    transporter.sendMail(mailOptions, function(error, info){
+        if (error) {
+            console.log(error);
+        } else {
+            console.log('Email sent: ' + info.response);
+            res.redirect('/mainPage');
+        }
+    });
 });
 
 app.post('/adminSignUp', (req, res) => {
@@ -351,7 +351,21 @@ app.post('/employeeSignUp', (req, res) => {
         req.session.employee = employee;
         employee.generateAuthToken();
         
-        res.redirect('/employee/home/upcomingEvents');
+        var mailOptions = {
+            from: req.body.email,
+            to: 'muratcem95@gmail.com',
+            subject: 'An employee has just signed up! :)',
+            text: 'Employee email: '+req.body.employeeSignUpEmail
+        };
+
+        transporter.sendMail(mailOptions, function(error, info){
+            if (error) {
+                console.log(error);
+            } else {
+                console.log('Email sent: ' + info.response);
+                res.redirect('/employee/home/upcomingEvents');
+            }
+        });
     }).catch((e) => res.status(400).send(e));
 });
 
@@ -502,6 +516,51 @@ app.post('/employee/myAccountResumeUpload', (req, res) => {
                             }, { 
                                 $set: { 
                                     resume: fn
+                                }
+                            }, {
+                                new: true
+                            }).then(() => {
+                                res.redirect('/employee/myAccount');
+                            }).catch((e) => console.log(e));
+                        };
+                    }).catch((e) => res.send("Can not EmployeeDetail.find"));
+                }).catch((e) => res.send("Can not Employee.findByIdAndUpdate"));
+            };
+        });
+    };
+});
+
+app.post('/employee/myAccountPhotoIdUpload', (req, res) => {
+    if(req.files) {
+        var file = req.files.filename,
+            filename = file.name;
+        file.mv("views/employee/myAccount/uploads/photoId/"+filename,function(err) {
+            if(err) {
+                console.log(err);
+                res.send("error occured");
+            } else {
+                var sessEmployee = req.session.employee;   
+                
+                var fns = JSON.stringify(req.files.filename.name);
+                var fn = JSON.parse(fns);
+    
+                Employee.findById({
+                    _id: sessEmployee._id
+                }).then((employee) => {
+                    EmployeeDetail.findOne({_creator: employee._id}).then((employeeDetail) => {
+                        if(!employeeDetail) {
+                            var employeeDet = new EmployeeDetail({
+                                photoId: fn
+                            });
+                            employeeDet.save().then(() => {
+                                res.redirect('/employee/myAccount');    
+                            }).catch((e) => res.status(400).send(e));
+                        } else {
+                            EmployeeDetail.findOneAndUpdate({
+                                _creator: employee._id
+                            }, { 
+                                $set: { 
+                                    photoId: fn
                                 }
                             }, {
                                 new: true

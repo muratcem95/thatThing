@@ -16,11 +16,24 @@ const EmployeeDetailSchema = new mongoose.Schema({
         trim: true,
         default: null
     },
-    birthDate: {
+    gender: {
         type: String,
         required: true
     },
+    phone: {
+        type: Number,
+        required: true
+    },
+    birthDate: {
+        type: String,
+        default: null
+    },
     city: {
+        type: String,
+        trim: true,
+        required: true
+    },
+    country: {
         type: String,
         trim: true,
         required: true
@@ -30,7 +43,7 @@ const EmployeeDetailSchema = new mongoose.Schema({
         trim: true,
         required: true
     },
-    description: {
+    interestedIn: {
         type: String,
         trim: true,
         required: true
@@ -39,6 +52,51 @@ const EmployeeDetailSchema = new mongoose.Schema({
         type: String,
         trim: true,
         default: null
+    },
+    photoId: {
+        type: String,
+        trim: true,
+        required: true
+    },
+    refOneName: {
+        type: String,
+        trim: true,
+        required: true
+    },
+    refOneDescription: {
+        type: String,
+        trim: true,
+        required: true
+    },
+    refOneEmail: {
+        type: String,
+        trim: true,
+        required: true
+    },
+    refOnePhone: {
+        type: Number,
+        trim: true,
+        required: true
+    },
+    refTwoName: {
+        type: String,
+        trim: true,
+        required: true
+    },
+    refTwoDescription: {
+        type: String,
+        trim: true,
+        required: true
+    },
+    refTwoEmail: {
+        type: String,
+        trim: true,
+        required: true
+    },
+    refTwoPhone: {
+        type: Number,
+        trim: true,
+        required: true
     },
     _creator: [{
         type: mongoose.Schema.Types.ObjectId,

@@ -38,57 +38,204 @@
         
         
         <div class="container">
-            {{#if employeeDetail.profileImage}}
-                <h4>Uploaded Profile Image</h4>
-                <img src="uploads/profileImage/{{employeeDetail.profileImage}}" width=20% height="auto">
-            {{else}}
-                <h4>Profile image upload</h4>
-                <form method="post" enctype="multipart/form-data" action="/employee/myAccountProfileImageUpload">
-                    <input type="file" name="filename">
-                    <button type="submit">Upload profile image</button>
+            <div class="uploads">
+                <h4 class="text-center header">Uploads</h4>
+                <div class="row">
+                    <div class="col">
+                        {{#if employeeDetail.profileImage}}
+                            <h6>Uploaded Profile Image</h6>
+                            <img src="uploads/profileImage/{{employeeDetail.profileImage}}" width=20% height="auto">
+                        {{else}}
+                            <h6>Profile image upload</h6>
+                            <form method="post" enctype="multipart/form-data" action="/employee/myAccountProfileImageUpload">
+                                <div class="input-group">    
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="filename" name="filename">
+                                        <label class="custom-file-label" for="customFile">Choose profile image</label>
+                                    </div>
+                                    <div class="input-group-append">
+                                        <button class="btn btn-success" type="submit">Upload profile image</button>
+                                    </div>    
+                                </div>    
+                            </form>
+                        {{/if}}
+                    </div>
+                    <div class="col">
+                        {{#if employeeDetail.resume}}
+                            <h6>Uploaded resume</h6>
+                            <embed src="uploads/resume/{{employeeDetail.resume}}" type="application/pdf" width=100% height=auto/>
+                        {{else}}
+                            <h6>Resume upload</h6>
+                            <form method="post" enctype="multipart/form-data" action="/employee/myAccountResumeUpload">
+                                <div class="input-group">    
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="filename" name="filename">
+                                        <label class="custom-file-label" for="customFile">Choose resume</label>
+                                    </div>
+                                    <div class="input-group-append">
+                                        <button class="btn btn-success" type="submit">Upload resume</button>
+                                    </div> 
+                                </div> 
+                                <small class="form-text text-muted">Please upload your resume as a .pdf file.</small>
+                            </form>
+                        {{/if}}
+                    </div>
+                </div>
+                {{#if employeeDetail.photoId}}
+                    <h6>Photo Id has been uploaded</h6>
+                {{else}}
+                    <h6>Photo Id upload</h6>
+                    <form method="post" enctype="multipart/form-data" action="/employee/myAccountPhotoIdUpload">
+                        <div class="input-group">    
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="filename" name="filename">
+                                <label class="custom-file-label" for="customFile">Choose photo id</label>
+                            </div>
+                            <div class="input-group-append">
+                                <button class="btn btn-success" type="submit">Upload photo id</button>
+                            </div>    
+                        </div>    
+                    </form>
+                {{/if}}
+            </div>    
+            <div class="uploads">
+                <h4 class="text-center header">Details</h4>
+                <form method="post" action="/employee/myAccountEdit">
+                    <div class="form-row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="name">Name</label>
+                                <input type="text" class="form-control" id="name" name="name" value="{{employeeDetail.name}}" required>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="linkedin">LinkedIn name</label>
+                                <input type="text" class="form-control" id="linkedin" name="linkedin" value="{{employeeDetail.linkedin}}">
+                                <small class="form-text text-muted">Providing a LinkedIn name or your resume increases your chances of finding work.</small>
+                            </div>
+                        </div>    
+                    </div>    
+                    <div class="form-row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="email">Email address</label>
+                                <input type="email" class="form-control" id="email" name="email" value="{{sessEmployee.email}}" required>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="phone">Phone number</label>
+                                <input type="number" class="form-control" id="phone" name="phone" value="{{sessEmployee.phone}}" required>
+                            </div>
+                        </div>    
+                    </div>   
+                    <div class="form-row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="gender">Gender</label>
+                                <select class="form-control" id="gender" name="gender" required>
+                                    <option hidden>{{employeeDetail.gender}}</option>
+                                    <option>Male</option>
+                                    <option>Female</option>
+                                    <option>Other</option>
+                                    <option>Do not want to share</option>
+                                </select>
+                            </div>
+                        </div>  
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="birthDate">Birth date</label>
+                                <input type="text" class="form-control" id="birthDate" name="birthDate" value="{{employeeDetail.birthDate}}">
+                            </div>
+                        </div>
+                    </div>  
+                    <div class="form-row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="city">City</label>
+                                <input type="text" class="form-control" id="city" name="city" value="{{employeeDetail.city}}" required>
+                            </div>
+                        </div>    
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="country">Country</label>
+                                <input type="text" class="form-control" id="country" name="country" value="{{employeeDetail.country}}" required>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="postalCode">Postal code</label>
+                                <input type="text" class="form-control" id="postalCode" name="postalCode" value="{{employeeDetail.postalCode}}" required>
+                            </div>
+                        </div>
+                    </div>    
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <textarea class="form-control" id="description" name="description" value="{{employeeDetail.description}}" required></textarea>
+                        <small class="form-text text-muted">Please type what jobs you would be interested in mostly: WAITER/WAITRESS; BARTENDER; COOK; DISHWASHER; CLEANER, and about yourself :)</small>
+                    </div>
+                    <div class="form-row">
+                        <div class="col">
+                            <h4>Reference 1</h4>
+                            <div class="form-group">
+                                <label for="refOneName">Name</label>
+                                <input type="text" class="form-control" id="refOneName" name="refOneName" value="{{sessEmployee.refOneName}}" required>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <h4>Reference 2</h4>
+                            <div class="form-group">
+                                <label for="refTwoName">Name</label>
+                                <input type="text" class="form-control" id="refTwoName" name="refTwoName" value="{{sessEmployee.refTwoName}}" required>
+                            </div>
+                        </div>    
+                    </div> 
+                    <div class="form-row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="refOneDescription">Description</label>
+                                <input type="text" class="form-control" id="refOneDescription" name="refOneDescription" value="{{sessEmployee.refOneDescription}}" required>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="refTwoDescription">Description</label>
+                                <input type="text" class="form-control" id="refTwoDescription" name="refTwoDescription" value="{{sessEmployee.refTwoDescription}}" required>
+                            </div>
+                        </div>    
+                    </div> 
+                    <div class="form-row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="refOneEmail">Email</label>
+                                <input type="email" class="form-control" id="refOneEmail" name="refOneEmail" value="{{sessEmployee.refOneEmail}}" required>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="refTwoEmail">Email</label>
+                                <input type="email" class="form-control" id="refTwoEmail" name="refTwoEmail" value="{{sessEmployee.refTwoEmail}}" required>
+                            </div>
+                        </div>    
+                    </div> 
+                    <div class="form-row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="refOnePhone">Phone</label>
+                                <input type="number" class="form-control" id="refOnePhone" name="refOnePhone" value="{{sessEmployee.refOnePhone}}" required>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="refTwoPhone">Phone</label>
+                                <input type="number" class="form-control" id="refTwoPhone" name="refTwoPhone" value="{{sessEmployee.refTwoPhone}}" required>
+                            </div>
+                        </div>    
+                    </div> 
+                    <button type="submit" class="btn btn-success">Update</button>
                 </form>
-            {{/if}}
-            <form method="post" action="/employee/myAccountEdit">
-                <div class="form-group">
-                    <label for="email">Email address</label>
-                    <input type="email" class="form-control" id="email" name="email" value="{{sessEmployee.email}}">
-                </div>
-                <div class="form-group">
-                    <label for="name">Name</label>
-                    <input type="text" class="form-control" id="name" name="name" value="{{employeeDetail.name}}" required>
-                </div>
-                <div class="form-group">
-                    <label for="linkedin">LinkedIn name</label>
-                    <input type="text" class="form-control" id="linkedin" name="linkedin" value="{{employeeDetail.linkedin}}">
-                </div>
-                <div class="form-group">
-                    <label for="birthDate">Birth date</label>
-                    <input type="text" class="form-control" id="birthDate" name="birthDate" value="{{employeeDetail.birthDate}}" required>
-                </div>
-                <div class="form-group">
-                    <label for="city">City</label>
-                    <input type="text" class="form-control" id="city" name="city" value="{{employeeDetail.city}}" required>
-                </div>
-                <div class="form-group">
-                    <label for="postalCode">Postal code</label>
-                    <input type="text" class="form-control" id="postalCode" name="postalCode" value="{{employeeDetail.postalCode}}" required>
-                </div>
-                <div class="form-group">
-                    <label for="description">Description</label>
-                    <input type="text" class="form-control" id="description" name="description" value="{{employeeDetail.description}}" required>
-                </div>
-                <button type="submit" class="btn btn-success">Update</button>
-            </form>
-            {{#if employeeDetail.resume}}
-                <h4>Uploaded PDF</h4>
-                <embed src="uploads/resume/{{employeeDetail.resume}}" type="application/pdf" width=100% height="400px"/>
-            {{else}}
-                <h4>PDF Upload</h4>
-                <form method="post" enctype="multipart/form-data" action="/employee/myAccountResumeUpload">
-                    <input type="file" name="filename">
-                    <button type="submit">Upload resume</button>
-                </form>
-            {{/if}}
+            </div>    
         </div> 
         
         
