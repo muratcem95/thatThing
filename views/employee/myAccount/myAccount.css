@@ -6,7 +6,23 @@ nav {
     border-radius: 10px;
     padding: 20px;
     margin-bottom: 40px;
+    background-color: whitesmoke;
 }
 .header {
     margin-bottom: 30px;
+}
+.icon {
+    width: 40px;
+}
+.icon:hover {
+    cursor: pointer;
+}
+.iconBtn {
+    border: none;
+    background-color: whitesmoke;
+    float: right;
+    margin-bottom: 20px;
+}
+#deletePho {
+    float: none;
 }

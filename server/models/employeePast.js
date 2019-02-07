@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const EmployeeInterestSchema = new mongoose.Schema({
+const EmployeePastSchema = new mongoose.Schema({
     _employee: {
         type: mongoose.Schema.Types.ObjectId
     },
@@ -10,6 +10,6 @@ const EmployeeInterestSchema = new mongoose.Schema({
     }
 });
 
-const EmployeeInterest = mongoose.model('employeeInterests', EmployeeInterestSchema);
+const EmployeePast = mongoose.model('employeePasts', EmployeePastSchema);
 
-module.exports = {EmployeeInterest};
+module.exports = {EmployeePast};

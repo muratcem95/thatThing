@@ -1,7 +1,3 @@
-$(document).ready(function(){
-  var table = $('#example').DataTable();     
-});
-
 const socket = io();
 
 socket.on('connect', function() {
@@ -11,8 +7,12 @@ socket.on('disconnect', function() {
     console.log('Disconnected from server.');
 });
 
+$(document).ready(function(){
+  var table = $('#example').DataTable();     
+});
+
 // data-* attributes to scan when populating modal values
-var ATTRIBUTES = ['name', 'employername', 'email', 'phone', 'date', 'address', 'postalcode', 'jobposition', 'description', 'notes', 'full'];
+var ATTRIBUTES = ['id', 'name', 'linkedin', 'gender', 'email', 'phone', 'birthdate', 'city', 'country', 'postalcode', 'interestedin', 'refonename', 'refonedescription', 'refoneemail', 'refonephone', 'reftwoname', 'reftwodescription', 'reftwoemail', 'reftwophone', 'signupdate', 'notes'];
 
 $('[data-toggle="modal"]').on('click', function (e) {
   // convert target (e.g. the button) to jquery object

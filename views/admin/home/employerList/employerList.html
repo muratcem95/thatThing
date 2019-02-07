@@ -11,7 +11,7 @@
     </head>
     <body>
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <a class="navbar-brand" href="/business/home/upcomingEvents">TT</a>
+            <a class="navbar-brand" href="/admin/home/upcomingEvents">TT</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -62,6 +62,7 @@
                         <th scope="col">Email</th>
                         <th scope="col">Phone</th>
                         <th scope="col">Address</th>
+                        <th scope="col">Sign up date</th>
                         <th scope="col">Notes</th>
                         <th scope="col">Delete</th>
                     </tr>
@@ -75,6 +76,7 @@
                             <td>{{email}}</td>
                             <td>{{phone}}</td>
                             <td>{{address}}</td>
+                            <td>{{signUpDate}}</td>
                             <td>
                                 <form method="post" action="/admin/home/employerListNotesForm">    
                                     <input name="employerId" value="{{_id}}" hidden>

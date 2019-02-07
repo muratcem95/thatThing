@@ -38,6 +38,9 @@ const EmployerSchema = new mongoose.Schema({
         trim: true,
         required: true
     },
+    signUpDate: {
+        type: Date
+    },
     notes: {
         type: String,
         default: null

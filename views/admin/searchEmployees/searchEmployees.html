@@ -11,7 +11,7 @@
     </head>
     <body>
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <a class="navbar-brand" href="/business/home/upcomingEvents">TT</a>
+            <a class="navbar-brand" href="/admin/home/upcomingEvents">TT</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -34,56 +34,32 @@
             </div>
         </nav>
         
-        <ul class="nav justify-content-center">
-            <li class="nav-item">
-                <a class="nav-link" href="/admin/home/createEmployer">Create Employer</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/admin/home/employerList">Employer List</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/admin/home/createEvent">Create Event</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/admin/home/upcomingEvents">Upcoming Events</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/admin/home/pastEvents">Past Events</a>
-            </li>
-        </ul>
-        
         <div class="container">
             <table class="table table-hover text-center" id="example" class="display">
                 <thead>
                     <tr>
                         <th scope="col">Id</th>
-                        <th scope="col">Profile Image</th>
                         <th scope="col">Name</th>
-                        <th scope="col">Linkedin</th>
+                        <th scope="col">Interested in</th>
                         <th scope="col">Email</th>
-<!--                        <th scope="col">Phone</th>-->
-                        <th scope="col">Birthdate</th>
-                        <th scope="col">Description</th>
-                        <th scope="col">Resume</th>
+                        <th scope="col">Phone</th>
+                        <th scope="col">City</th>
+                        <th scope="col">Notes</th>
+                        <th scope="col">Delete</th>
                     </tr>
                 </thead>
                 <tbody>
                     {{#each employees}}
                         <tr>
                             <td>{{_id}}</td>
-<!--                            <th id="eventName" scope="row" data-toggle="modal" data-target="#myModal" data-name="{{name}}" data-employername="{{creator}}" data-email="{{email}}" data-phone="{{phone}}" data-date="{{date}}" data-address="{{address}}" data-postalcode="{{postalCode}}" data-jobposition="{{jobPosition}}" data-description="{{description}}" data-notes="{{notes}}" data-full="{{full}}">{{name}}</th>-->
-                            <td><img src="../../employee/myAccount/uploads/profileImage/{{profileImage}}" width="100px;" height="auto"></td>
-                            <td>{{name}}</td>
-                            <td>{{linkedin}}</td>
-                            <td>{{email}}</td>
-<!--                            <td>{{Phone}}</td>-->
-                            <td>{{birthdate}}</td>
-                            <td>{{description}}</td>
-                            <td><embed src="../../employee/myAccount/uploads/resume/{{resume}}" type="application/pdf" width="100px" height="auto"/></td>
-<!--
+                            <td id="employeeName" scope="row" data-toggle="modal" data-target="#myModal{{_id}}" data-id="{{_id}}" data-name="{{name}}" data-linkedin="{{linkedin}}" data-gender="{{gender}}" data-email="{{_creator.email}}" data-phone="{{phone}}" data-birthdate="{{birthDate}}" data-city="{{city}}" data-country="{{country}}" data-postalcode="{{postalCode}}" data-interestedin="{{interestedIn}}" data-refonename="{{refOneName}}" data-refonedescription="{{refOneDescription}}" data-refoneemail="{{refOneEmail}}" data-refonephone="{{refOnePhone}}" data-reftwoname="{{refTwoName}}" data-reftwodescription="{{refTwoDescription}}" data-reftwoemail="{{refTwoEmail}}" data-reftwophone="{{refTwoPhone}}" data-signupdate="{{_creator.signUpDate}}" data-notes="{{notes}}">{{name}}</td>
+                            <td>{{interestedIn}}</td>
+                            <td>{{_creator.email}}</td>
+                            <td>{{phone}}</td>
+                            <td>{{city}}</td>
                             <td>
-                                <form method="post" action="/admin/home/upcomingEventsNotesForm">    
-                                    <input name="eventId" value="{{_id}}" hidden>
+                                <form method="post" action="/admin/searchEmployeesNotesForm">    
+                                    <input id="employeeId" name="employeeId" value="{{_creator._id}}" hidden>
                                     <div class="form-group">                    
                                         <textarea class="form-control form-control-sm" id="notes" name="notes">{{notes}}</textarea>
                                     </div>    
@@ -91,56 +67,59 @@
                                 </form> 
                             </td>
                             <td>
-                                <form method="post" action="/admin/home/upcomingEventsFullForm">    
-                                    <input name="eventId" value="{{_id}}" hidden> 
-                                    {{#if full}} 
-                                        <button type="submit" class="btn btn-success btn-sm">Full</button>
-                                    {{else}}
-                                        <button type="submit" class="btn btn-success btn-sm">Not full</button>
-                                    {{/if}}
-                                </form>
-                            </td>
-                            <td>
-                                <form method="post" action="/admin/home/upcomingEventsDeleteEventForm">
-                                    <input name="eventId" value="{{_id}}" hidden>
+                                <form method="post" action="/admin/searchEmployeesDeleteForm">
+                                    <input name="employeeId" value="{{_creator._id}}" hidden>
                                     <button type="submit" class="btn btn-sm btn-danger">Delete</button> 
                                 </form>  
                             </td>
--->
                         </tr>
-                    {{/each}}
-                </tbody>
-            </table>
-        </div>
-        
-        <!-- Modal -->
-        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                    
+                    <!--         Modal -->
+        <div class="modal fade" id="myModal{{_id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalCenterTitle">Event Info</h5>
+                        <h5 class="modal-title" id="exampleModalCenterTitle">Employee Info</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
-                        <p><b>Event name:</b> <span id="modal-name"></span></p>
-                        <p><b>Employer name: </b> <span id="modal-employername"></span></p>
+                        <div class="img text-center"><img src="../../employee/myAccount/uploads/profileImage/{{profileImage}}"></div>
+                        <p><b>Employee id:</b> <span id="modal-id"></span></p>
+                        <p><b>Name:</b> <span id="modal-name"></span></p>
+                        <p><b>LinkedIn: </b> <span id="modal-linkedin"></span></p>
+                        <p><b>Gender: </b><span id="modal-gender"></span></p>
                         <p><b>Email:</b> <span id="modal-email"></span></p>
                         <p><b>Phone:</b> <span id="modal-phone"></span></p>
                         <hr>
-                        <p><b>Date:</b> <span id="modal-date"></span></p>
-                        <p><b>Address:</b> <span id="modal-address"></span></p>
-                        <p><b>Postal Code:</b> <span id="modal-postalcode"></span></p>
+                        <p><b>Birthdate:</b> <span id="modal-birthdate"></span></p>
+                        <p><b>City/Country/Postal Code:</b> <span id="modal-city"></span>, <span id="modal-country"></span>; <span id="modal-postalcode"></span></p>
                         <hr>
-                        <p><b>Job position:</b> <span id="modal-jobposition"></span></p>
-                        <p><b>Description:</b> <span id="modal-description"></span></p>
+                        <p><b>Resume:</b></p>
+                        <embed src="../../employee/myAccount/uploads/resume/{{resume}}" type="application/pdf"/>
+                        <p><b>Photo id:</b></p>
+                        <img src="../../employee/myAccount/uploads/photoId/{{photoId}}">
+                        <hr>
+                        <p><b>Ref 1 name</b> <span id="modal-refonename"></span></p>
+                        <p><b>Ref 1 description</b> <span id="modal-refonedescription"></span></p>
+                        <p><b>Ref 1 email</b> <span id="modal-refoneemail"></span></p>
+                        <p><b>Ref 1 phone</b> <span id="modal-refonephone"></span></p>
+                        <p><b>Ref 2 name</b> <span id="modal-reftwoname"></span></p>
+                        <p><b>Ref 2 description</b> <span id="modal-reftwodescription"></span></p>
+                        <p><b>Ref 2 email</b> <span id="modal-reftwoemail"></span></p>
+                        <p><b>Ref 2 phone</b> <span id="modal-reftwophone"></span></p>
+                        <hr><b>Sign up date: </b><span id="modal-signupdate"></span>
                         <hr>
                         <p><b>Notes:</b> <span id="modal-notes"></span></p>
-                        <p><b>Full:</b> <span id="modal-full"></span></p>
                     </div>    
                 </div>
             </div>
+        </div>
+                    
+                    {{/each}}
+                </tbody>
+            </table>
         </div>
         
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
@@ -150,6 +129,6 @@
         <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
         <script src="/socket.io/socket.io.js"></script>
-        <script src="/admin/home/upcomingEvents/upcomingEvents.js" type="text/javascript"></script>
+        <script src="/admin/searchEmployees/searchEmployees.js" type="text/javascript"></script>
     </body>
 </html>

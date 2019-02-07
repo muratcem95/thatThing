@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const validator = require('validator');
 
 const EmployeeDetailSchema = new mongoose.Schema({
     profileImage: {
@@ -9,7 +10,7 @@ const EmployeeDetailSchema = new mongoose.Schema({
     name: {
         type: String,
         trim: true,
-        required: true
+        default: null
     },
     linkedin: {
         type: String,
@@ -18,11 +19,11 @@ const EmployeeDetailSchema = new mongoose.Schema({
     },
     gender: {
         type: String,
-        required: true
+        default: null
     },
     phone: {
         type: Number,
-        required: true
+        default: null
     },
     birthDate: {
         type: String,
@@ -31,22 +32,22 @@ const EmployeeDetailSchema = new mongoose.Schema({
     city: {
         type: String,
         trim: true,
-        required: true
+        default: null
     },
     country: {
         type: String,
         trim: true,
-        required: true
+        default: null
     },
     postalCode: {
         type: String,
         trim: true,
-        required: true
+        default: null
     },
     interestedIn: {
         type: String,
         trim: true,
-        required: true
+        default: null
     },
     resume: {
         type: String,
@@ -56,52 +57,54 @@ const EmployeeDetailSchema = new mongoose.Schema({
     photoId: {
         type: String,
         trim: true,
-        required: true
+        default: null
     },
     refOneName: {
         type: String,
         trim: true,
-        required: true
+        default: null
     },
     refOneDescription: {
         type: String,
         trim: true,
-        required: true
+        default: null
     },
     refOneEmail: {
         type: String,
-        trim: true,
-        required: true
+        default: null
     },
     refOnePhone: {
         type: Number,
         trim: true,
-        required: true
+        default: null
     },
     refTwoName: {
         type: String,
         trim: true,
-        required: true
+        default: null
     },
     refTwoDescription: {
         type: String,
         trim: true,
-        required: true
+        default: null
     },
     refTwoEmail: {
         type: String,
-        trim: true,
-        required: true
+        default: null
     },
     refTwoPhone: {
         type: Number,
         trim: true,
-        required: true
+        default: null
     },
-    _creator: [{
+    notes: {
+        type: String,
+        default: null
+    },
+    _creator: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'employees'
-    }]
+    }
 });
 
 const EmployeeDetail = mongoose.model('employeeDetails', EmployeeDetailSchema);

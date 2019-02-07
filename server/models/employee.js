@@ -20,6 +20,9 @@ const EmployeeSchema = new mongoose.Schema({
         required: true,
         minlength: 6
     },
+    signUpDate: {
+        type: Date
+    },
     tokens: [{
         access: {
             type: String,

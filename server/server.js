@@ -22,6 +22,7 @@ const {EmployeeDetail} = require('./models/employeeDetail');
 const {Event} = require('./models/event');
 const {EmployeeInterest} = require('./models/employeeInterest');
 const {EmployeeAccept} = require('./models/employeeAccept');
+const {EmployeePast} = require('./models/employeePast');
 
 const viewsPath = path.join(__dirname, '../views');
 const port = process.env.PORT || 3000;
@@ -125,9 +126,10 @@ app.post('/admin/home/createEmployerForm', authenticateAdmin, (req, res) => {
         email: req.body.email,
         phone: req.body.phone,
         address: req.body.address,
+        signUpDate: moment(),
         notes: req.body.notes
     });
-    employer.save().then(() => res.redirect('/admin/home/upcomingEvents')).catch((e) => res.status(400).send(e));
+    employer.save().then(() => res.redirect('/admin/home/employerList')).catch((e) => res.status(400).send(e));
 });
 
 app.get('/admin/home/employerList', authenticateAdmin, (req, res) => {
@@ -194,18 +196,7 @@ app.get('/admin/home/upcomingEvents', authenticateAdmin, (req, res) => {
             $lte: moment('2099')
         }
     }).then((events) => {
-        Employer.find({
-            _id: events._creator
-        }).then((employers) => {
-            if(!employers) {
-                res.send("oops");
-            } else {
-                console.log(employers);
-                res.render('admin/home/upcomingEvents/upcomingEvents.html', {employers, events});
-            }
-            
-            
-        }).catch((e) => res.send("Can not Employer.find"));
+        res.render('admin/home/upcomingEvents/upcomingEvents.html', {events});
     }).catch((e) => res.send("Can not Event.find"));
 });
 
@@ -270,11 +261,7 @@ app.get('/admin/home/pastEvents', authenticateAdmin, (req, res) => {
             $lte: moment()
         }
     }).then((events) => {
-        Employer.find({
-            _id: events._creator
-        }).then((employers) => {
-            res.render('admin/home/pastEvents/pastEvents.html', {employers, events});
-        }).catch((e) => res.send("Can not Employer.find"));
+        res.render('admin/home/pastEvents/pastEvents.html', {events});
     }).catch((e) => res.send("Can not Event.find"));
 });
 
@@ -334,10 +321,45 @@ app.get('/admin/searchEmployees', authenticateAdmin, (req, res) => {
     var sessAdmin = req.session.admin;
     
     EmployeeDetail.find().populate('_creator').then((employees) => {
-        console.log(employees);
-        
+        console.log(employees[0]._creator._id);
         res.render('admin/searchEmployees/searchEmployees.html', {employees});
     }).catch((e) => res.send(e));
+});
+
+app.post('/admin/searchEmployeesNotesForm', authenticateAdmin, (req, res) => {
+    var sessAdmin = req.session.admin;    
+
+//    Employee.findById({_id: req.body.employeeId}).then((emp) => {
+//        console.log(emp);
+//        res.redirect('/admin/searchEmployees');
+//    }).catch((e) => res.send(e));
+    
+//    EmployeeDetail.find().then((employees) => {
+//        console.log(employees);I
+//        res.redirect('/admin/searchEmployees');
+//    }).catch((e) => res.send(e));
+    
+    EmployeeDetail.findOneAndUpdate({
+        _creator: req.body.employeeId
+    }, { 
+        $set: { 
+            notes: req.body.notes
+        }
+    }, {
+        new: true
+    }).then((employee) => {
+        console.log(employee);
+        
+        res.redirect('/admin/searchEmployees');
+    }).catch((e) => res.send(e));
+});
+
+app.post('/admin/searchEmployeesDeleteForm', authenticateAdmin, (req, res) => {
+    var sessAdmin = req.session.admin;   
+    
+    Employee.findByIdAndDelete({
+        _id: req.body.employeeId,
+    }).then(() => res.redirect('/admin/searchEmployees')).catch((e) => res.send(e));
 });
 
 
@@ -345,7 +367,8 @@ app.get('/admin/searchEmployees', authenticateAdmin, (req, res) => {
 app.post('/employeeSignUp', (req, res) => {
     var employee = new Employee({
         email: req.body.employeeSignUpEmail,
-        password: req.body.employeeSignUpPassword
+        password: req.body.employeeSignUpPassword,
+        signUpDate: moment()
     });
     employee.save().then(() => {
         req.session.employee = employee;
@@ -363,10 +386,11 @@ app.post('/employeeSignUp', (req, res) => {
                 console.log(error);
             } else {
                 console.log('Email sent: ' + info.response);
-                res.redirect('/employee/home/upcomingEvents');
             }
         });
-    }).catch((e) => res.status(400).send(e));
+        
+        res.redirect('/employee/home/upcomingEvents');
+    }).catch((e) => res.send(e));
 });
 
 app.post('/employeeLogIn', (req, res) => {
@@ -375,7 +399,7 @@ app.post('/employeeLogIn', (req, res) => {
         employee.generateAuthToken();
         
         res.redirect('/employee/home/upcomingEvents');
-    }).catch((e) => res.status(401).send(e));
+    }).catch((e) => res.send(e));
 });
 
 app.get('/employeeLogOut', authenticateEmployee, (req, res) => {
@@ -383,23 +407,6 @@ app.get('/employeeLogOut', authenticateEmployee, (req, res) => {
         req.session.reset();
         
         res.redirect("/mainPage");
-    }).catch((e) => res.status(400).send(e));
-});
-
-app.get('/employee/home/upcomingEvents', authenticateEmployee, (req, res) => {
-    var sessEmployee = req.session.employee; 
-    
-    EmployeeAccept.find({
-        _employee: sessEmployee._id
-    }).populate('_event').then((events) => {
-        eventsObj = [];
-        
-        for (var i = 0; i < events.length; i++) { 
-            var eventObj = events[i]._event[0];
-            eventsObj.push(eventObj);
-        };
-        
-        res.render('employee/home/upcomingEvents/upcomingEvents.html', {sessEmployee, eventsObj});
     }).catch((e) => res.send(e));
 });
 
@@ -408,24 +415,23 @@ app.get('/employee/home/interestedEvents', authenticateEmployee, (req, res) => {
     
     EmployeeInterest.find({
         _employee: sessEmployee._id
-    }).populate('_event').then((events) => {
-        eventsObj = [];
-        
-        for (var i = 0; i < events.length; i++) { 
-            var eventObj = events[i]._event[0];
-            eventsObj.push(eventObj);
-        };
-        
-        res.render('employee/home/interestedEvents/interestedEvents.html', {sessEmployee, eventsObj});
-    }).catch((e) => res.send(e));
+    }).populate('_event').then((events) => res.render('employee/home/interestedEvents/interestedEvents.html', {sessEmployee, events})).catch((e) => res.send(e));
 });
 
-app.post('/employee/home/interestedEventsDeleteForm', authenticateEmployee, (req, res) => {
+app.get('/employee/home/upcomingEvents', authenticateEmployee, (req, res) => {
     var sessEmployee = req.session.employee; 
     
-    EmployeeInterest.findOneAndDelete({
-        _event: req.body.eventId,
-    }).then(() => res.redirect('/employee/home/upcomingEvents')).catch((e) => res.send(e));
+    EmployeeAccept.find({
+        _employee: sessEmployee._id
+    }).populate('_event').then((events) => res.render('employee/home/upcomingEvents/upcomingEvents.html', {sessEmployee, events})).catch((e) => res.send(e));
+});
+
+app.get('/employee/home/pastEvents', authenticateEmployee, (req, res) => {
+    var sessEmployee = req.session.employee; 
+    
+    EmployeePast.find({
+        _employee: sessEmployee._id
+    }).populate('_event').then((events) => res.render('employee/home/pastEvents/pastEvents.html', {sessEmployee, events})).catch((e) => res.send(e));
 });
 
 app.get('/employee/myAccount', authenticateEmployee, (req, res) => {
@@ -437,7 +443,7 @@ app.get('/employee/myAccount', authenticateEmployee, (req, res) => {
         } else {
             res.render('employee/myAccount/myAccount.html', {sessEmployee, employeeDetail});
         };
-    }).catch((e) => res.send("Can not EmployeeDetail.find"));
+    }).catch((e) => res.send(e));
 });
 
 app.post('/employee/myAccountprofileImageUpload', (req, res) => {
@@ -446,43 +452,49 @@ app.post('/employee/myAccountprofileImageUpload', (req, res) => {
             filename = file.name;
         file.mv("views/employee/myAccount/uploads/profileImage/"+filename,function(err) {
             if(err) {
-                console.log(err);
-                res.send("error occured");
+                res.send(err);
             } else {
                 var sessEmployee = req.session.employee;   
                 
                 var fns = JSON.stringify(req.files.filename.name);
                 var fn = JSON.parse(fns);
     
-                Employee.findById({
-                    _id: sessEmployee._id
-                }).then((employee) => {
-                    EmployeeDetail.findOne({_creator: employee._id}).then((employeeDetail) => {
-                        if(!employeeDetail) {
-                            var employeeDet = new EmployeeDetail({
+                EmployeeDetail.findOne({_creator: sessEmployee._id}).then((employeeDetail) => {
+                    if(!employeeDetail) {
+                        var employeeDet = new EmployeeDetail({
+                            profileImage: fn,
+                            _creator: sessEmployee._id
+                        });
+                        employeeDet.save().then(() => res.redirect('/employee/myAccount')).catch((e) => res.send(e));
+                    } else {
+                        EmployeeDetail.findOneAndUpdate({
+                            _creator: sessEmployee._id
+                        }, { 
+                            $set: { 
                                 profileImage: fn
-                            });
-                            employeeDet.save().then(() => {
-                                res.redirect('/employee/myAccount');    
-                            }).catch((e) => res.status(400).send(e));
-                        } else {
-                            EmployeeDetail.findOneAndUpdate({
-                                _creator: employee._id
-                            }, { 
-                                $set: { 
-                                    profileImage: fn
-                                }
-                            }, {
-                                new: true
-                            }).then(() => {
-                                res.redirect('/employee/myAccount');
-                            }).catch((e) => console.log(e));
-                        };
-                    }).catch((e) => res.send("Can not EmployeeDetail.find"));
-                }).catch((e) => res.send("Can not Employee.findByIdAndUpdate"));
+                            }
+                        }, {
+                            new: true
+                        }).then(() => res.redirect('/employee/myAccount')).catch((e) => res.send(e));
+                    };
+                }).catch((e) => res.send(e));
             };
         });
     };
+});
+
+app.post('/employee/myAccountProfileImageDelete', (req, res) => {
+    var sessEmployee = req.session.employee;
+        
+    EmployeeDetail.findOneAndUpdate({
+        _creator: sessEmployee._id
+    }, { 
+        $set: { 
+            profileImage: null
+        }
+    }, {
+        new: true
+    }).then(() => res.redirect('/employee/myAccount')).catch((e) => res.send(e));       
 });
 
 app.post('/employee/myAccountResumeUpload', (req, res) => {
@@ -491,43 +503,49 @@ app.post('/employee/myAccountResumeUpload', (req, res) => {
             filename = file.name;
         file.mv("views/employee/myAccount/uploads/resume/"+filename,function(err) {
             if(err) {
-                console.log(err);
-                res.send("error occured");
+                res.send(err);
             } else {
                 var sessEmployee = req.session.employee;   
                 
                 var fns = JSON.stringify(req.files.filename.name);
                 var fn = JSON.parse(fns);
     
-                Employee.findById({
-                    _id: sessEmployee._id
-                }).then((employee) => {
-                    EmployeeDetail.findOne({_creator: employee._id}).then((employeeDetail) => {
-                        if(!employeeDetail) {
-                            var employeeDet = new EmployeeDetail({
+                EmployeeDetail.findOne({_creator: sessEmployee._id}).then((employeeDetail) => {
+                    if(!employeeDetail) {
+                        var employeeDet = new EmployeeDetail({
+                            resume: fn,
+                            _creator: sessEmployee._id
+                        });
+                        employeeDet.save().then(() => res.redirect('/employee/myAccount')).catch((e) => res.send(e));
+                    } else {
+                        EmployeeDetail.findOneAndUpdate({
+                            _creator: sessEmployee._id
+                        }, { 
+                            $set: { 
                                 resume: fn
-                            });
-                            employeeDet.save().then(() => {
-                                res.redirect('/employee/myAccount');    
-                            }).catch((e) => res.status(400).send(e));
-                        } else {
-                            EmployeeDetail.findOneAndUpdate({
-                                _creator: employee._id
-                            }, { 
-                                $set: { 
-                                    resume: fn
-                                }
-                            }, {
-                                new: true
-                            }).then(() => {
-                                res.redirect('/employee/myAccount');
-                            }).catch((e) => console.log(e));
-                        };
-                    }).catch((e) => res.send("Can not EmployeeDetail.find"));
-                }).catch((e) => res.send("Can not Employee.findByIdAndUpdate"));
+                            }
+                        }, {
+                            new: true
+                        }).then(() => res.redirect('/employee/myAccount')).catch((e) => res.send(e));
+                    };
+                }).catch((e) => res.send(e));
             };
         });
     };
+});
+
+app.post('/employee/myAccountResumeDelete', (req, res) => {
+    var sessEmployee = req.session.employee;
+           
+    EmployeeDetail.findOneAndUpdate({
+        _creator: sessEmployee._id
+    }, { 
+        $set: { 
+            resume: null
+        }
+    }, {
+        new: true
+    }).then(() => res.redirect('/employee/myAccount')).catch((e) => res.send(e));       
 });
 
 app.post('/employee/myAccountPhotoIdUpload', (req, res) => {
@@ -536,43 +554,49 @@ app.post('/employee/myAccountPhotoIdUpload', (req, res) => {
             filename = file.name;
         file.mv("views/employee/myAccount/uploads/photoId/"+filename,function(err) {
             if(err) {
-                console.log(err);
-                res.send("error occured");
+                res.send(err);
             } else {
                 var sessEmployee = req.session.employee;   
                 
                 var fns = JSON.stringify(req.files.filename.name);
                 var fn = JSON.parse(fns);
     
-                Employee.findById({
-                    _id: sessEmployee._id
-                }).then((employee) => {
-                    EmployeeDetail.findOne({_creator: employee._id}).then((employeeDetail) => {
-                        if(!employeeDetail) {
-                            var employeeDet = new EmployeeDetail({
+                EmployeeDetail.findOne({_creator: sessEmployee._id}).then((employeeDetail) => {
+                    if(!employeeDetail) {
+                        var employeeDet = new EmployeeDetail({
+                            photoId: fn,
+                            _creator: sessEmployee._id
+                        });
+                        employeeDet.save().then(() => res.redirect('/employee/myAccount')).catch((e) => res.send(e));
+                    } else {
+                        EmployeeDetail.findOneAndUpdate({
+                            _creator: sessEmployee._id
+                        }, { 
+                            $set: { 
                                 photoId: fn
-                            });
-                            employeeDet.save().then(() => {
-                                res.redirect('/employee/myAccount');    
-                            }).catch((e) => res.status(400).send(e));
-                        } else {
-                            EmployeeDetail.findOneAndUpdate({
-                                _creator: employee._id
-                            }, { 
-                                $set: { 
-                                    photoId: fn
-                                }
-                            }, {
-                                new: true
-                            }).then(() => {
-                                res.redirect('/employee/myAccount');
-                            }).catch((e) => console.log(e));
-                        };
-                    }).catch((e) => res.send("Can not EmployeeDetail.find"));
-                }).catch((e) => res.send("Can not Employee.findByIdAndUpdate"));
+                            }
+                        }, {
+                            new: true
+                        }).then(() => res.redirect('/employee/myAccount')).catch((e) => res.send(e));
+                    };
+                }).catch((e) => res.send(e));
             };
         });
     };
+});
+
+app.post('/employee/myAccountPhotoIdDelete', (req, res) => {
+    var sessEmployee = req.session.employee;
+          
+    EmployeeDetail.findOneAndUpdate({
+        _creator: sessEmployee._id
+    }, { 
+        $set: { 
+            photoId: null
+        }
+    }, {
+        new: true
+    }).then(() => res.redirect('/employee/myAccount')).catch((e) => res.send(e));       
 });
 
 app.post('/employee/myAccountEdit', authenticateEmployee, (req, res) => {
@@ -592,15 +616,24 @@ app.post('/employee/myAccountEdit', authenticateEmployee, (req, res) => {
                 var employeeDet = new EmployeeDetail({
                     name: req.body.name,
                     linkedin: req.body.linkedin,
+                    gender: req.body.gender,
+                    phone: req.body.phone,
                     birthDate: req.body.birthDate,
                     city: req.body.city,
+                    country: req.body.country,
                     postalCode: req.body.postalCode,
-                    description: req.body.description,
+                    interestedIn: req.body.interestedIn,
+                    refOneName: req.body.refOneName,
+                    refOneDescription: req.body.refOneDescription,
+                    refOneEmail: req.body.refOneEmail,
+                    refOnePhone: req.body.refOnePhone,
+                    refTwoName: req.body.refTwoName,
+                    refTwoDescription: req.body.refTwoDescription,
+                    refTwoEmail: req.body.refTwoEmail,
+                    refTwoPhone: req.body.refTwoPhone,
                     _creator: employee._id
                 });
-                employeeDet.save().then(() => {
-                    res.redirect('/employee/myAccount');    
-                }).catch((e) => res.status(400).send(e));
+                employeeDet.save().then(() => res.redirect('/employee/myAccount')).catch((e) => res.send(e));
             } else {
                 EmployeeDetail.findOneAndUpdate({
                     _creator: employee._id
@@ -608,19 +641,28 @@ app.post('/employee/myAccountEdit', authenticateEmployee, (req, res) => {
                     $set: { 
                         name: req.body.name,
                         linkedin: req.body.linkedin,
+                        gender: req.body.gender,
+                        phone: req.body.phone,
                         birthDate: req.body.birthDate,
                         city: req.body.city,
+                        country: req.body.country,
                         postalCode: req.body.postalCode,
-                        description: req.body.description,
+                        interestedIn: req.body.interestedIn,
+                        refOneName: req.body.refOneName,
+                        refOneDescription: req.body.refOneDescription,
+                        refOneEmail: req.body.refOneEmail,
+                        refOnePhone: req.body.refOnePhone,
+                        refTwoName: req.body.refTwoName,
+                        refTwoDescription: req.body.refTwoDescription,
+                        refTwoEmail: req.body.refTwoEmail,
+                        refTwoPhone: req.body.refTwoPhone
                     }
                 }, {
                     new: true
-                }).then((emp) => {
-                    res.redirect('/employee/myAccount');
-                }).catch((e) => res.send("Can not Employee.findOneAndUpdate"));
+                }).then(() => res.redirect('/employee/myAccount')).catch((e) => res.send(e));
             };
-        }).catch((e) => res.send("Can not EmployeeDetail.find"));
-    }).catch((e) => res.send("Can not Employee.findByIdAndUpdate"));
+        }).catch((e) => res.send(e));
+    }).catch((e) => res.send(e));
 });
 
 app.get('/employee/searchJobs', (req, res) => {
@@ -631,9 +673,7 @@ app.get('/employee/searchJobs', (req, res) => {
             $gte: moment(),
             $lte: moment('2099')
         }
-    }).sort('date').then((events) => {
-        res.render('employee/searchJobs/searchJobs.html', {sessEmployee, events});
-    }).catch((e) => res.send('Can not Event.find'));
+    }).sort('date').then((events) => res.render('employee/searchJobs/searchJobs.html', {sessEmployee, events})).catch((e) => res.send(e));
 });
 
 app.post('/employee/searchJobsInterest', (req, res) => {
@@ -641,14 +681,14 @@ app.post('/employee/searchJobsInterest', (req, res) => {
     
     var employeeInterest = new EmployeeInterest({
         _employee: sessEmployee._id,
-        _event: req.body._event
+        _event: req.body.eventId
     });
     employeeInterest.save().then(() => {
         var mailOptions = {
             from: sessEmployee.email,
             to: 'muratcem95@gmail.com',
             subject: 'Interested in a job',
-            text: 'Employee Id: '+sessEmployee._id+';'+'Event Id: '+req.body._event
+            text: 'Employee Id: '+sessEmployee._id+';'+'Event Id: '+req.body.eventId
         };
 
         transporter.sendMail(mailOptions, function(error, info){
@@ -660,7 +700,7 @@ app.post('/employee/searchJobsInterest', (req, res) => {
         });
         
         res.redirect('/employee/searchJobs');
-    }).catch((e) => res.send('Can not be saved.'));
+    }).catch((e) => res.send(e));
 });
 
 

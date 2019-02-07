@@ -10,7 +10,7 @@
     </head>
     <body>
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <a class="navbar-brand" href="/mainPage">TT</a>
+            <a class="navbar-brand" href="/employee/home/upcomingEvents">TT</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -22,9 +22,6 @@
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item">
                         <a class="nav-link" href="/employee/home/upcomingEvents">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/employee/favourites">Favourites</a>
                     </li>
                     <li class="nav-item active">
                         <a class="nav-link" href="/employee/myAccount">My Account</a>
@@ -43,10 +40,20 @@
                 <div class="row">
                     <div class="col">
                         {{#if employeeDetail.profileImage}}
-                            <h6>Uploaded Profile Image</h6>
-                            <img src="uploads/profileImage/{{employeeDetail.profileImage}}" width=20% height="auto">
+                            <div class="row">
+                                <div class="col">
+                                    <h6>Uploaded Profile Image</h6>
+                                </div>
+                                <div class="col">
+                                    <form method="post" enctype="multipart/form-data" action="/employee/myAccountProfileImageDelete">
+                                        <button type="submit" class="iconBtn"><img src="../../icons/delete.png" class="icon"></button>
+                                    </form>
+                                </div>
+                            </div>
+                            <img src="uploads/profileImage/{{employeeDetail.profileImage}}" width=auto height="350px">
                         {{else}}
-                            <h6>Profile image upload</h6>
+                            <h6>Profile image upload<br><span style="font-size: 12px;"><ul><li>Please make sure it's NOT a PDF you're uploading.</li></ul></span></h6>
+                            
                             <form method="post" enctype="multipart/form-data" action="/employee/myAccountProfileImageUpload">
                                 <div class="input-group">    
                                     <div class="custom-file">
@@ -62,10 +69,19 @@
                     </div>
                     <div class="col">
                         {{#if employeeDetail.resume}}
-                            <h6>Uploaded resume</h6>
-                            <embed src="uploads/resume/{{employeeDetail.resume}}" type="application/pdf" width=100% height=auto/>
+                            <div class="row">
+                                <div class="col">
+                                    <h6>Uploaded resume</h6>
+                                </div>
+                                <div class="col">
+                                    <form method="post" enctype="multipart/form-data" action="/employee/myAccountResumeDelete">
+                                        <button type="submit" class="iconBtn"><img src="../../icons/delete.png" class="icon"></button>
+                                    </form>
+                                </div>
+                            </div>
+                            <embed src="uploads/resume/{{employeeDetail.resume}}" type="application/pdf" width=100% height=350px/>
                         {{else}}
-                            <h6>Resume upload</h6>
+                            <h6>Resume upload<br><span style="font-size: 12px;"><ul><li>Please make sure you're uploading a PDF.</li></ul></span></h6>
                             <form method="post" enctype="multipart/form-data" action="/employee/myAccountResumeUpload">
                                 <div class="input-group">    
                                     <div class="custom-file">
@@ -82,9 +98,13 @@
                     </div>
                 </div>
                 {{#if employeeDetail.photoId}}
-                    <h6>Photo Id has been uploaded</h6>
+                    <h6 style="margin-top: 40px;">Photo Id has been uploaded!</h6>
+
+                    <form method="post" enctype="multipart/form-data" action="/employee/myAccountPhotoIdDelete">
+                        <button type="submit" class="iconBtn" id="deletePho"><img src="../../icons/delete.png" class="icon"></button>
+                    </form>
                 {{else}}
-                    <h6>Photo Id upload</h6>
+                    <h6>Photo Id upload<br><span style="font-size: 12px;"><ul><li>Please make sure it's NOT a PDF you're uploading.</li></ul></span></h6>
                     <form method="post" enctype="multipart/form-data" action="/employee/myAccountPhotoIdUpload">
                         <div class="input-group">    
                             <div class="custom-file">
@@ -105,7 +125,7 @@
                         <div class="col">
                             <div class="form-group">
                                 <label for="name">Name</label>
-                                <input type="text" class="form-control" id="name" name="name" value="{{employeeDetail.name}}" required>
+                                <input type="text" class="form-control" id="name" name="name" value="{{employeeDetail.name}}">
                             </div>
                         </div>
                         <div class="col">
@@ -120,13 +140,13 @@
                         <div class="col">
                             <div class="form-group">
                                 <label for="email">Email address</label>
-                                <input type="email" class="form-control" id="email" name="email" value="{{sessEmployee.email}}" required>
+                                <input type="email" class="form-control" id="email" name="email" value="{{sessEmployee.email}}">
                             </div>
                         </div>
                         <div class="col">
                             <div class="form-group">
                                 <label for="phone">Phone number</label>
-                                <input type="number" class="form-control" id="phone" name="phone" value="{{sessEmployee.phone}}" required>
+                                <input type="number" class="form-control" id="phone" name="phone" value="{{employeeDetail.phone}}">
                             </div>
                         </div>    
                     </div>   
@@ -134,7 +154,7 @@
                         <div class="col">
                             <div class="form-group">
                                 <label for="gender">Gender</label>
-                                <select class="form-control" id="gender" name="gender" required>
+                                <select class="form-control" id="gender" name="gender">
                                     <option hidden>{{employeeDetail.gender}}</option>
                                     <option>Male</option>
                                     <option>Female</option>
@@ -154,40 +174,40 @@
                         <div class="col">
                             <div class="form-group">
                                 <label for="city">City</label>
-                                <input type="text" class="form-control" id="city" name="city" value="{{employeeDetail.city}}" required>
+                                <input type="text" class="form-control" id="city" name="city" value="{{employeeDetail.city}}">
                             </div>
                         </div>    
                         <div class="col">
                             <div class="form-group">
                                 <label for="country">Country</label>
-                                <input type="text" class="form-control" id="country" name="country" value="{{employeeDetail.country}}" required>
+                                <input type="text" class="form-control" id="country" name="country" value="{{employeeDetail.country}}">
                             </div>
                         </div>
                         <div class="col">
                             <div class="form-group">
                                 <label for="postalCode">Postal code</label>
-                                <input type="text" class="form-control" id="postalCode" name="postalCode" value="{{employeeDetail.postalCode}}" required>
+                                <input type="text" class="form-control" id="postalCode" name="postalCode" value="{{employeeDetail.postalCode}}">
                             </div>
                         </div>
                     </div>    
                     <div class="form-group">
-                        <label for="description">Description</label>
-                        <textarea class="form-control" id="description" name="description" value="{{employeeDetail.description}}" required></textarea>
+                        <label for="interestedIn">Interested in</label>
+                        <textarea class="form-control" id="interestedIn" name="interestedIn">{{employeeDetail.interestedIn}}</textarea>
                         <small class="form-text text-muted">Please type what jobs you would be interested in mostly: WAITER/WAITRESS; BARTENDER; COOK; DISHWASHER; CLEANER, and about yourself :)</small>
                     </div>
                     <div class="form-row">
                         <div class="col">
-                            <h4>Reference 1</h4>
+                            <h4>Reference 1<br><span style="font-size: 12px;"><ul><li>Please include your ex-work places or non-relatives.</li></ul></span></h4>
                             <div class="form-group">
                                 <label for="refOneName">Name</label>
-                                <input type="text" class="form-control" id="refOneName" name="refOneName" value="{{sessEmployee.refOneName}}" required>
+                                <input type="text" class="form-control" id="refOneName" name="refOneName" value="{{employeeDetail.refOneName}}">
                             </div>
                         </div>
                         <div class="col">
-                            <h4>Reference 2</h4>
+                            <h4>Reference 2<br><span style="font-size: 12px;"><ul><li>Please include your ex-work places or non-relatives.</li></ul></span></h4>
                             <div class="form-group">
                                 <label for="refTwoName">Name</label>
-                                <input type="text" class="form-control" id="refTwoName" name="refTwoName" value="{{sessEmployee.refTwoName}}" required>
+                                <input type="text" class="form-control" id="refTwoName" name="refTwoName" value="{{employeeDetail.refTwoName}}">
                             </div>
                         </div>    
                     </div> 
@@ -195,13 +215,13 @@
                         <div class="col">
                             <div class="form-group">
                                 <label for="refOneDescription">Description</label>
-                                <input type="text" class="form-control" id="refOneDescription" name="refOneDescription" value="{{sessEmployee.refOneDescription}}" required>
+                                <input type="text" class="form-control" id="refOneDescription" name="refOneDescription" value="{{employeeDetail.refOneDescription}}">
                             </div>
                         </div>
                         <div class="col">
                             <div class="form-group">
                                 <label for="refTwoDescription">Description</label>
-                                <input type="text" class="form-control" id="refTwoDescription" name="refTwoDescription" value="{{sessEmployee.refTwoDescription}}" required>
+                                <input type="text" class="form-control" id="refTwoDescription" name="refTwoDescription" value="{{employeeDetail.refTwoDescription}}">
                             </div>
                         </div>    
                     </div> 
@@ -209,13 +229,13 @@
                         <div class="col">
                             <div class="form-group">
                                 <label for="refOneEmail">Email</label>
-                                <input type="email" class="form-control" id="refOneEmail" name="refOneEmail" value="{{sessEmployee.refOneEmail}}" required>
+                                <input type="email" class="form-control" id="refOneEmail" name="refOneEmail" value="{{employeeDetail.refOneEmail}}">
                             </div>
                         </div>
                         <div class="col">
                             <div class="form-group">
                                 <label for="refTwoEmail">Email</label>
-                                <input type="email" class="form-control" id="refTwoEmail" name="refTwoEmail" value="{{sessEmployee.refTwoEmail}}" required>
+                                <input type="email" class="form-control" id="refTwoEmail" name="refTwoEmail" value="{{employeeDetail.refTwoEmail}}">
                             </div>
                         </div>    
                     </div> 
@@ -223,13 +243,13 @@
                         <div class="col">
                             <div class="form-group">
                                 <label for="refOnePhone">Phone</label>
-                                <input type="number" class="form-control" id="refOnePhone" name="refOnePhone" value="{{sessEmployee.refOnePhone}}" required>
+                                <input type="number" class="form-control" id="refOnePhone" name="refOnePhone" value="{{employeeDetail.refOnePhone}}">
                             </div>
                         </div>
                         <div class="col">
                             <div class="form-group">
                                 <label for="refTwoPhone">Phone</label>
-                                <input type="number" class="form-control" id="refTwoPhone" name="refTwoPhone" value="{{sessEmployee.refTwoPhone}}" required>
+                                <input type="number" class="form-control" id="refTwoPhone" name="refTwoPhone" value="{{employeeDetail.refTwoPhone}}">
                             </div>
                         </div>    
                     </div> 
@@ -242,6 +262,7 @@
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.js"></script>
         <script src="/socket.io/socket.io.js"></script>
         <script src="myAccount.js" type="text/javascript"></script>
     </body>

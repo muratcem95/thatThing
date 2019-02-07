@@ -11,7 +11,7 @@
     </head>
     <body>
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <a class="navbar-brand" href="/mainPage">TT</a>
+            <a class="navbar-brand" href="/employee/home/upcomingEvents">TT</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -23,9 +23,6 @@
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item active">
                         <a class="nav-link" href="/employee/home/upcomingEvents">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/employee/favourites">Favourites</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/employee/myAccount">My Account</a>
@@ -57,60 +54,46 @@
                         <th scope="col">Employer name</th>
                         <th scope="col">Date</th>
                         <th scope="col">Job Position</th>
-                        <th scope="col">Delete</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {{#each eventsObj}}
-                        <tr>
-                            <th id="eventName" scope="row" data-toggle="modal" data-target="#myModal" data-name="{{name}}" data-employername="{{creator}}" data-email="{{email}}" data-phone="{{phone}}" data-date="{{date}}" data-address="{{address}}" data-postalcode="{{postalCode}}" data-jobposition="{{jobPosition}}" data-description="{{description}}">{{name}}</th>
-                            <td>{{creator}}</td>
-                            <td>{{date}}</td>
-                            <td>{{jobPosition}}</td>
-                            <td>
-                                <form method="post" action="/employee/home/interestedEventsDeleteForm">
-                                    <input name="eventId" value="{{_id}}" hidden>
-                                    <button type="submit" class="btn btn-sm btn-danger">Delete</button> 
-                                </form>  
-                            </td>
+                    {{#each events}}
+                        <tr id="eventName" scope="row" data-toggle="modal" data-target="#myModal{{_id}}">
+                            <th>{{_event.name}}</th>
+                            <td>{{_event.creator}}</td>
+                            <td>{{_event.date}}</td>
+                            <td>{{_event.jobPosition}}</td>
                         </tr>
+                        <!-- Modal -->
+                        <div class="modal fade" id="myModal{{_id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalCenterTitle">Event Info</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p><b>Event name:</b> {{_event.name}}</p>
+                                        <p><b>Employer name:</b> {{_event.creator}}</p>
+                                        <p><b>Date:</b> {{_event.date}}</p>
+                                        <p><b>Address:</b> {{_event.address}}</p>
+                                        <hr>
+                                        <p><b>Job position:</b> {{event.jobPosition}}</p>
+                                        <p><b>Description:</b> {{event.description}}</p>
+                                    </div>    
+                                </div>
+                            </div>
+                        </div>
                     {{/each}}
                 </tbody>
             </table>
         </div>
         
-        <!-- Modal -->
-        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalCenterTitle">Event Info</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <p><b>Event name:</b> <span id="modal-name"></span></p>
-                        <p><b>Employer name: </b> <span id="modal-employername"></span></p>
-                        <p><b>Email:</b> <span id="modal-email"></span></p>
-                        <p><b>Phone:</b> <span id="modal-phone"></span></p>
-                        <hr>
-                        <p><b>Date:</b> <span id="modal-date"></span></p>
-                        <p><b>Address:</b> <span id="modal-address"></span></p>
-                        <p><b>Postal Code:</b> <span id="modal-postalcode"></span></p>
-                        <hr>
-                        <p><b>Job position:</b> <span id="modal-jobposition"></span></p>
-                        <p><b>Description:</b> <span id="modal-description"></span></p>
-                    </div>    
-                </div>
-            </div>
-        </div>
-         
-        
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
         <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
         <script src="/socket.io/socket.io.js"></script>

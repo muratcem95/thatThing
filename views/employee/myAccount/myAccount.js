@@ -6,3 +6,7 @@ socket.on('connect', function() {
 socket.on('disconnect', function() {
     console.log('Disconnected from server.');
 });
+
+$(document).ready(function () {
+    bsCustomFileInput.init();
+});
