@@ -23,6 +23,7 @@ const {Event} = require('./models/event');
 const {EmployeeInterest} = require('./models/employeeInterest');
 const {EmployeeAccept} = require('./models/employeeAccept');
 const {EmployeePast} = require('./models/employeePast');
+const {EmployeeFavourite} = require('./models/employeeFavourite');
 
 const viewsPath = path.join(__dirname, '../views');
 const port = process.env.PORT || 3000;
@@ -312,8 +313,8 @@ app.get('/admin/searchEmployees', authenticateAdmin, (req, res) => {
 app.post('/admin/searchEmployeesNotesForm', authenticateAdmin, (req, res) => {
     var sessAdmin = req.session.admin;    
     
-    EmployeeDetail.findOneAndUpdate({
-        _creator: req.body.employeeId
+    EmployeeDetail.findByIdAndUpdate({
+        _id: req.body.employeeId
     }, { 
         $set: { 
             notes: req.body.notes
@@ -321,6 +322,50 @@ app.post('/admin/searchEmployeesNotesForm', authenticateAdmin, (req, res) => {
     }, {
         new: true
     }).then(() => res.redirect('/admin/searchEmployees')).catch((e) => res.send(e));
+});
+
+app.post('/admin/searchEmployeesFavouritesForm', authenticateAdmin, (req, res) => {
+    var sessAdmin = req.session.admin;    
+    
+    var employeeFavourite = new EmployeeFavourite({
+        _employee: req.body.employeeDetailId
+    });
+    employeeFavourite.save().then(() => res.redirect('/admin/searchEmployees')).catch((e) => res.send(e));
+});
+
+app.get('/admin/favourites', authenticateAdmin, (req, res) => {
+    var sessAdmin = req.session.admin;
+    
+    EmployeeFavourite.find().populate({
+        path: '_employee',
+        populate: {
+            path: '_creator'
+        }
+    }).then((employees) => {
+        console.log(employees);
+        
+        res.render('admin/favourites/favourites.html', {employees});
+    }).catch((e) => res.send(e));
+});
+
+app.post('/admin/favouritesNotesForm', authenticateAdmin, (req, res) => {
+    var sessAdmin = req.session.admin;    
+    
+    EmployeeDetail.findByIdAndUpdate({
+        _id: req.body.employeeId
+    }, { 
+        $set: { 
+            notes: req.body.notes
+        }
+    }, {
+        new: true
+    }).then(() => res.redirect('/admin/favourites')).catch((e) => res.send(e));
+});
+
+app.post('/admin/favouritesDeleteForm', authenticateAdmin, (req, res) => {
+    var sessAdmin = req.session.admin;    
+    
+    EmployeeFavourite.findByIdAndDelete({ _id: req.body.employeeId }).then(() => res.redirect('/admin/favourites')).catch((e) => res.send(e));
 });
 
 
