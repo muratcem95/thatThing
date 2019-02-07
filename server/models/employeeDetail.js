@@ -12,6 +12,11 @@ const EmployeeDetailSchema = new mongoose.Schema({
         trim: true,
         default: null
     },
+    rate: {
+        type: Number,
+        trim: true,
+        default: null
+    },
     linkedin: {
         type: String,
         trim: true,

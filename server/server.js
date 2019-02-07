@@ -670,10 +670,27 @@ app.get('/employee/searchJobs', (req, res) => {
     
     Event.find({
         date: {
-            $gte: moment(),
-            $lte: moment('2099')
+            $gte: new Date(),
+            $lte: new Date('2099')
         }
-    }).sort('date').then((events) => res.render('employee/searchJobs/searchJobs.html', {sessEmployee, events})).catch((e) => res.send(e));
+    }).sort('date').then((events) => {
+        EmployeeInterest.find({_employee: sessEmployee._id}).populate('_event').then((empInt) => {
+            
+            for(var i=0; i<empInt.length; i++) {
+                events.push(empInt[i]._event);
+            };
+            
+//            for(var i=0; i<empInt.length; i++) {
+//                for(var j=0; j<events.length; j++) {
+//                    if(empInt[i]._event === events[j]._id) {
+//                        events.splice(i, 1);
+//                    };
+//                };
+//            };
+                   
+            res.render('employee/searchJobs/searchJobs.html', {sessEmployee, events});
+        }).catch((e) => res.send(e));
+    }).catch((e) => res.send(e));
 });
 
 app.post('/employee/searchJobsInterest', (req, res) => {
@@ -681,7 +698,8 @@ app.post('/employee/searchJobsInterest', (req, res) => {
     
     var employeeInterest = new EmployeeInterest({
         _employee: sessEmployee._id,
-        _event: req.body.eventId
+        _event: req.body.eventId,
+        _unique: sessEmployee._id+req.body.eventId
     });
     employeeInterest.save().then(() => {
         var mailOptions = {
@@ -703,41 +721,6 @@ app.post('/employee/searchJobsInterest', (req, res) => {
     }).catch((e) => res.send(e));
 });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //IO CONNECTIONS
 io.on('connection', (socket) => {
     console.log('New user connected.');
@@ -747,4 +730,3 @@ io.on('connection', (socket) => {
 });
     
 server.listen(port, () => console.log(`Server is up on port ${port}`));
-

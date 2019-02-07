@@ -7,6 +7,10 @@ const EmployeeInterestSchema = new mongoose.Schema({
     _event: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'events'
+    },
+    _unique: {
+        type: String,
+        unique: true
     }
 });
 
