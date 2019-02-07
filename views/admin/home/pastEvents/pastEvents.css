@@ -1,3 +1,6 @@
-#eventName:hover {
+#event:hover {
     cursor: pointer;
+}
+#notFull {
+    color: red;
 }

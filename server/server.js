@@ -59,6 +59,14 @@ app.use(upload());
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
 
+
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+//MAIN PAGE AND BUSINESS SIGNUP FORM
 app.get('/mainPage', (req, res) => {
     res.render('mainPage/mainPage.html');
 });
@@ -68,7 +76,7 @@ app.post('/mainPageBusinessForm', (req, res) => {
         from: req.body.email,
         to: 'muratcem95@gmail.com',
         subject: 'A business is interest to work with me :)!',
-        text: 'Business name: '+req.body.name+'; BRN: '+req.body.brn+'; Email: '+req.body.email+'; Phone: '+req.body.phone+'; Address: '+req.body.address+'.'
+        text: 'Business name: '+req.body.name+'; BRN: '+req.body.brn+'; Email: '+req.body.email+'; Phone: '+req.body.phone+'; Address: '+req.body.address+'. Sign up date: '+moment()
     };
 
     transporter.sendMail(mailOptions, function(error, info){
@@ -76,11 +84,19 @@ app.post('/mainPageBusinessForm', (req, res) => {
             console.log(error);
         } else {
             console.log('Email sent: ' + info.response);
-            res.redirect('/mainPage');
         }
     });
+    
+    res.redirect('/mainPage');
 });
 
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//ADMIN
 app.post('/adminSignUp', (req, res) => {
     var admin = new Admin({
         email: req.body.adminSignUpEmail,
@@ -91,7 +107,7 @@ app.post('/adminSignUp', (req, res) => {
         admin.generateAuthToken();
         
         res.redirect('/admin/home/upcomingEvents');
-    }).catch((e) => res.status(400).send(e));
+    }).catch((e) => res.send(e));
 });
 
 app.post('/adminLogIn', (req, res) => {
@@ -100,7 +116,7 @@ app.post('/adminLogIn', (req, res) => {
         admin.generateAuthToken();
         
         res.redirect('/admin/home/upcomingEvents');
-    }).catch((e) => res.status(401).send(e));
+    }).catch((e) => res.send(e));
 });
 
 app.get('/adminLogOut', authenticateAdmin, (req, res) => {
@@ -108,7 +124,7 @@ app.get('/adminLogOut', authenticateAdmin, (req, res) => {
         req.session.reset();
         
         res.redirect("/mainPage");
-    }).catch((e) => res.status(400).send(e));
+    }).catch((e) => res.send(e));
 });
 
 app.get('/admin/home/createEmployer', authenticateAdmin, (req, res) => {
@@ -129,13 +145,13 @@ app.post('/admin/home/createEmployerForm', authenticateAdmin, (req, res) => {
         signUpDate: moment(),
         notes: req.body.notes
     });
-    employer.save().then(() => res.redirect('/admin/home/employerList')).catch((e) => res.status(400).send(e));
+    employer.save().then(() => res.redirect('/admin/home/employerList')).catch((e) => res.send(e));
 });
 
 app.get('/admin/home/employerList', authenticateAdmin, (req, res) => {
     var sessAdmin = req.session.admin;    
         
-    Employer.find().then((employers) => res.render('admin/home/employerList/employerList.html', {employers})).catch((e) => res.send("Can not Employer.find"));
+    Employer.find().then((employers) => res.render('admin/home/employerList/employerList.html', {employers})).catch((e) => res.send(e));
 });
 
 app.post('/admin/home/employerListNotesForm', authenticateAdmin, (req, res) => {
@@ -149,21 +165,13 @@ app.post('/admin/home/employerListNotesForm', authenticateAdmin, (req, res) => {
         }
     }, {
         new: true
-    }).then(() => res.redirect('/admin/home/employerList')).catch((e) => res.send("Can not Employer.findByIdAndUpdate"));
-});
-
-app.post('/admin/home/employerListDeleteForm', authenticateAdmin, (req, res) => {
-    var sessAdmin = req.session.admin;   
-    
-    Employer.findByIdAndDelete({
-        _id: req.body.employerId,
-    }).then(() => res.redirect('/admin/home/employerList')).catch((e) => res.send("Can not Employer.findByIdAndDelete"));
+    }).then(() => res.redirect('/admin/home/employerList')).catch((e) => res.send(e));
 });
 
 app.get('/admin/home/createEvent', authenticateAdmin, (req, res) => {
     var sessAdmin = req.session.admin; 
     
-    Employer.find().then((employers) => res.render('admin/home/createEvent/createEvent.html', {employers})).catch((e) => res.send('Unable to Employer.find'));
+    Employer.find().then((employers) => res.render('admin/home/createEvent/createEvent.html', {employers})).catch((e) => res.send(e));
     
     
 });
@@ -182,9 +190,7 @@ app.post('/admin/home/createEventForm', authenticateAdmin, (req, res) => {
         description: req.body.description,
         creator: req.body.creator
     });
-    event.save().then(() => {
-        res.redirect('/admin/home/upcomingEvents');    
-    }).catch((e) => res.status(400).send(e));
+    event.save().then(() => res.redirect('/admin/home/upcomingEvents')).catch((e) => res.send(e));
 });
 
 app.get('/admin/home/upcomingEvents', authenticateAdmin, (req, res) => {
@@ -195,9 +201,7 @@ app.get('/admin/home/upcomingEvents', authenticateAdmin, (req, res) => {
             $gte: moment(),
             $lte: moment('2099')
         }
-    }).then((events) => {
-        res.render('admin/home/upcomingEvents/upcomingEvents.html', {events});
-    }).catch((e) => res.send("Can not Event.find"));
+    }).then((events) => res.render('admin/home/upcomingEvents/upcomingEvents.html', {events})).catch((e) => res.send(e));
 });
 
 app.post('/admin/home/upcomingEventsNotesForm', authenticateAdmin, (req, res) => {
@@ -211,7 +215,7 @@ app.post('/admin/home/upcomingEventsNotesForm', authenticateAdmin, (req, res) =>
         }
     }, {
         new: true
-    }).then(() => res.redirect('/admin/home/upcomingEvents')).catch((e) => res.send("Can not Event.findByIdAndUpdate"));
+    }).then(() => res.redirect('/admin/home/upcomingEvents')).catch((e) => res.send(e));
 });
 
 app.post('/admin/home/upcomingEventsFullForm', authenticateAdmin, (req, res) => {
@@ -229,7 +233,7 @@ app.post('/admin/home/upcomingEventsFullForm', authenticateAdmin, (req, res) => 
                 }
             }, {
                 new: true
-            }).then(() => res.redirect('/admin/home/upcomingEvents')).catch((e) => res.send("Can not Event.findByIdAndUpdate"));
+            }).then(() => res.redirect('/admin/home/upcomingEvents')).catch((e) => res.send(e));
         } else {
             Event.findByIdAndUpdate({
                 _id: req.body.eventId
@@ -239,17 +243,9 @@ app.post('/admin/home/upcomingEventsFullForm', authenticateAdmin, (req, res) => 
                 }
             }, {
                 new: true
-            }).then(() => res.redirect('/admin/home/upcomingEvents')).catch((e) => res.send("Can not Event.findByIdAndUpdate"));
+            }).then(() => res.redirect('/admin/home/upcomingEvents')).catch((e) => res.send(e));
         };
-    }).catch((e) => res.send("Can not Event.findOne"));
-});
-
-app.post('/admin/home/upcomingEventsDeleteEventForm', authenticateAdmin, (req, res) => {
-    var sessAdmin = req.session.admin;   
-    
-    Event.findByIdAndDelete({
-        _id: req.body.eventId,
-    }).then(() => res.redirect('/admin/home/upcomingEvents')).catch((e) => res.send("Can not Event.findByIdAndDelete"));
+    }).catch((e) => res.send(e));
 });
 
 app.get('/admin/home/pastEvents', authenticateAdmin, (req, res) => {
@@ -260,9 +256,7 @@ app.get('/admin/home/pastEvents', authenticateAdmin, (req, res) => {
             $gte: moment('2000'),
             $lte: moment()
         }
-    }).then((events) => {
-        res.render('admin/home/pastEvents/pastEvents.html', {events});
-    }).catch((e) => res.send("Can not Event.find"));
+    }).then((events) => res.render('admin/home/pastEvents/pastEvents.html', {events})).catch((e) => res.send(e));
 });
 
 app.post('/admin/home/pastEventsNotesForm', authenticateAdmin, (req, res) => {
@@ -276,7 +270,7 @@ app.post('/admin/home/pastEventsNotesForm', authenticateAdmin, (req, res) => {
         }
     }, {
         new: true
-    }).then((events) => res.redirect('/admin/home/pastEvents')).catch((e) => res.send("Can not Event.findByIdAndUpdate"));
+    }).then(() => res.redirect('/admin/home/pastEvents')).catch((e) => res.send(e));
 });
 
 app.post('/admin/home/pastEventsFullForm', authenticateAdmin, (req, res) => {
@@ -294,7 +288,7 @@ app.post('/admin/home/pastEventsFullForm', authenticateAdmin, (req, res) => {
                 }
             }, {
                 new: true
-            }).then((events) => res.redirect('/admin/home/pastEvents')).catch((e) => res.send("Can not Event.findByIdAndUpdate"));
+            }).then(() => res.redirect('/admin/home/pastEvents')).catch((e) => res.send(e));
         } else {
             Event.findByIdAndUpdate({
                 _id: req.body.eventId
@@ -304,40 +298,19 @@ app.post('/admin/home/pastEventsFullForm', authenticateAdmin, (req, res) => {
                 }
             }, {
                 new: true
-            }).then((events) => res.redirect('/admin/home/pastEvents')).catch((e) => res.send("Can not Event.findByIdAndUpdate"));
+            }).then(() => res.redirect('/admin/home/pastEvents')).catch((e) => res.send(e));
         };
-    }).catch((e) => res.send("Can not Event.findOne"));
-});
-
-app.post('/admin/home/pastEventsDeleteEventForm', authenticateAdmin, (req, res) => {
-    var sessAdmin = req.session.admin;   
-    
-    Event.findByIdAndDelete({
-        _id: req.body.eventId,
-    }).then(() => res.redirect('/admin/home/pastEvents')).catch((e) => res.send("Can not Event.findByIdAndDelete"));
+    }).catch((e) => res.send(e));
 });
 
 app.get('/admin/searchEmployees', authenticateAdmin, (req, res) => {
     var sessAdmin = req.session.admin;
     
-    EmployeeDetail.find().populate('_creator').then((employees) => {
-        console.log(employees[0]._creator._id);
-        res.render('admin/searchEmployees/searchEmployees.html', {employees});
-    }).catch((e) => res.send(e));
+    EmployeeDetail.find().populate('_creator').then((employees) => res.render('admin/searchEmployees/searchEmployees.html', {employees})).catch((e) => res.send(e));
 });
 
 app.post('/admin/searchEmployeesNotesForm', authenticateAdmin, (req, res) => {
     var sessAdmin = req.session.admin;    
-
-//    Employee.findById({_id: req.body.employeeId}).then((emp) => {
-//        console.log(emp);
-//        res.redirect('/admin/searchEmployees');
-//    }).catch((e) => res.send(e));
-    
-//    EmployeeDetail.find().then((employees) => {
-//        console.log(employees);I
-//        res.redirect('/admin/searchEmployees');
-//    }).catch((e) => res.send(e));
     
     EmployeeDetail.findOneAndUpdate({
         _creator: req.body.employeeId
@@ -347,23 +320,16 @@ app.post('/admin/searchEmployeesNotesForm', authenticateAdmin, (req, res) => {
         }
     }, {
         new: true
-    }).then((employee) => {
-        console.log(employee);
-        
-        res.redirect('/admin/searchEmployees');
-    }).catch((e) => res.send(e));
-});
-
-app.post('/admin/searchEmployeesDeleteForm', authenticateAdmin, (req, res) => {
-    var sessAdmin = req.session.admin;   
-    
-    Employee.findByIdAndDelete({
-        _id: req.body.employeeId,
     }).then(() => res.redirect('/admin/searchEmployees')).catch((e) => res.send(e));
 });
 
 
 
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//EMPLOYEES
 app.post('/employeeSignUp', (req, res) => {
     var employee = new Employee({
         email: req.body.employeeSignUpEmail,
@@ -721,6 +687,10 @@ app.post('/employee/searchJobsInterest', (req, res) => {
     }).catch((e) => res.send(e));
 });
 
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //IO CONNECTIONS
 io.on('connection', (socket) => {
     console.log('New user connected.');
