@@ -38,25 +38,37 @@
             <table class="table table-hover text-center" id="example" class="display">
                 <thead>
                     <tr>
+                        <th scope="col">Rate</th>
                         <th scope="col">Id</th>
                         <th scope="col">Name</th>
                         <th scope="col">Interested in</th>
                         <th scope="col">Email</th>
                         <th scope="col">Phone</th>
                         <th scope="col">City</th>
+                        <th scope="col">Postcal code</th>
                         <th scope="col">Notes</th>
                         <th scope="col">Delete</th>
                     </tr>
                 </thead>
                 <tbody>
                     {{#each employees}}
-                        <tr id="employee" scope="row" data-toggle="modal" data-target="#myModal{{_id}}">
-                            <td>{{_employee._creator._id}}</td>
-                            <td>{{_employee.name}}</td>
-                            <td>{{_employee.interestedIn}}</td>
-                            <td>{{_employee._creator.email}}</td>
-                            <td>{{_employee.phone}}</td>
-                            <td>{{_employee.city}}</td>
+                        <tr scope="row">
+                            <td>
+                                <form method="post" action="/admin/favouritesRateForm">    
+                                    <input id="employeeId" name="employeeId" value="{{_employee._id}}" hidden>
+                                    <div class="form-group">                    
+                                        <textarea class="form-control form-control-sm" name="rate">{{_employee.rate}}</textarea>   
+                                    </div>    
+                                    <button type="submit" class="btn btn-success btn-sm">Update</button>    
+                                </form> 
+                            </td>
+                            <td class="employee" data-toggle="modal" data-target="#myModal{{_id}}">{{_employee._creator._id}}</td>
+                            <td class="employee" data-toggle="modal" data-target="#myModal{{_id}}">{{_employee.name}}</td>
+                            <td class="employee" data-toggle="modal" data-target="#myModal{{_id}}">{{_employee.interestedIn}}</td>
+                            <td class="employee" data-toggle="modal" data-target="#myModal{{_id}}">{{_employee._creator.email}}</td>
+                            <td class="employee" data-toggle="modal" data-target="#myModal{{_id}}">{{_employee.phone}}</td>
+                            <td class="employee" data-toggle="modal" data-target="#myModal{{_id}}">{{_employee.city}}</td>
+                            <td class="employee"  data-toggle="modal" data-target="#myModal{{_id}}">{{_employee.postalCode}}</td>
                             <td>
                                 <form method="post" action="/admin/favouritesNotesForm">    
                                     <input id="employeeId" name="employeeId" value="{{_employee._id}}" hidden>
@@ -69,6 +81,7 @@
                             <td>
                                 <form method="post" action="/admin/favouritesDeleteForm">    
                                     <input id="employeeId" name="employeeId" value="{{_id}}" hidden>   
+                                    <input id="employeeDetailId" name="employeeDetailId" value="{{_employee._id}}" hidden>
                                     <button type="submit" class="btn btn-success btn-sm">Delete</button>    
                                 </form>
                             </td>

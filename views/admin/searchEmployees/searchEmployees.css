@@ -1,4 +1,7 @@
-#employee:hover {
+nav {
+    margin-bottom: 40px;
+}
+.employee:hover {
     cursor: pointer;
 }
 img {

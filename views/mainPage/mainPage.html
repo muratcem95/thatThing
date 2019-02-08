@@ -16,16 +16,7 @@
             </button>
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <form class="form-inline my-2 my-lg-0">
-                    <select class="form-control mr-sm-2" id="exampleFormControlSelect1">
-                        <option hidden>Potential Job Positions</option>
-                        <option>Waiter/Waitress</option>
-                        <option>Bartender</option>
-                        <option>Cook</option>
-                        <option>Dish Washer</option>
-                    </select>
-                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-                </form>
+                <button class="btn btn-outline-success my-2 my-sm-0" id="startSearch" type="button">Start searching Jobs</button>
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item dropdown active">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria- haspopup="true" aria-expanded="false">
@@ -33,7 +24,7 @@
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" data-toggle="modal" href="" data-target="#businessSignUp">Business</a>
-                            <a class="dropdown-item" data-toggle="modal" href="" data-target="#employeeSignUp">Employee</a>
+                            <a class="dropdown-item" data-toggle="modal" href="" data-target="#employeeSignUp">Job Seeker</a>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" data-toggle="modal" href="" data-target="#adminSignUp">Admin</a>
                         </div>
@@ -43,7 +34,7 @@
                             Log In
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" data-toggle="modal" href="" data-target="#employeeLogIn">Employee</a>
+                            <a class="dropdown-item" data-toggle="modal" href="" data-target="#employeeLogIn">Job Seeker</a>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" data-toggle="modal" href="" data-target="#adminLogIn">Admin</a>
                         </div>
@@ -58,11 +49,15 @@
             </div>
         </nav>
         
+        <div id="searchResult" class="alert alert-warning" role="alert">
+            <h6 class="text-center">There are <span id="info">{{eventsLength}} jobs</span> available! Sign up to see and potentially work in one :)</h6>
+        </div>
+        
         <div class="jumbotron text-center">
             <h1 class="display-4">THAT THING</h1>
             <p class="lead">Finally, you can experience That Thing... buy That Thing...</p>
             <hr class="my-4">
-            <p>Work during your free time to have a better life.</p>
+            <p>Work during your free time to have freedom.</p>
             <div class="dropdown">
                 <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Sign Up
@@ -70,32 +65,32 @@
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     <a class="dropdown-item" data-toggle="modal" href="" data-target="#businessSignUp">Business</a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" data-toggle="modal" href="" data-target="#employeeSignUp">Employee</a>
+                    <a class="dropdown-item" data-toggle="modal" href="" data-target="#employeeSignUp">Job Seeker</a>
                 </div>
             </div>
         </div>
         
         <div class="container">
             <h5>What We Do?</h5>
-            <div class="row">
-                <div class="col text-center">
-                    <h5>Businesses</h5>
-                    <ul>
-                        <li>Trouble finding last minute substitudes?</li>
-                        <li>Annoyed by paying high commissions?</li>
-                        <li>Want to trust a thing that has millions in database?</li>
-                    </ul>
-                </div>
-                <div class="col text-center">
-                    <h5>Employees</h5>
-                    <ul>
-                        <li>Want to work at your own time?</li>
-                        <li>Want to get paid quick for your weekend get away?</li>
-                        <li>sdoifjdfs fdoijd sdfji sdokjkjdfs j</li>
-                    </ul>
-                </div>
+            <div class="block text-center" id="left">
+                <h5>Businesses</h5>
+                <ul>
+                    <li>Trouble finding last minute substitudes?</li>
+                    <li>Annoyed by paying high commissions?</li>
+                    <li>Want to trust <b>That Thing</b> that has many in their database?</li>
+                </ul>
+            </div>
+            <div class="block text-center" id="right">
+                <h5>Job Seekers</h5>
+                <ul>
+                    <li>Want to work at your own time?</li>
+                    <li>Want to get paid quick for your weekend get away?</li>
+                    <li>Interested in waitressing/waitering, bartending, cooking, ...</li>
+                </ul>
             </div>
         </div>
+        
+        <div style="clear: both;"></div>
         
         <div class=" bottomJumbo jumbotron text-center">
             <p class="lead">THAT THING</p>
@@ -148,7 +143,7 @@
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalCenterTitle">Employee Sign Up</h5>
+                        <h5 class="modal-title" id="exampleModalCenterTitle">Job Seeker Sign Up</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -232,7 +227,7 @@
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalCenterTitle">Employee Log In</h5>
+                        <h5 class="modal-title" id="exampleModalCenterTitle">Job Seeker Log In</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>

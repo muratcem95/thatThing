@@ -13,7 +13,7 @@ const EmployeeDetailSchema = new mongoose.Schema({
         default: null
     },
     rate: {
-        type: Number,
+        type: String,
         trim: true,
         default: null
     },
@@ -105,6 +105,10 @@ const EmployeeDetailSchema = new mongoose.Schema({
     notes: {
         type: String,
         default: null
+    },
+    favourited: {
+        type: Boolean,
+        default: false
     },
     _creator: {
         type: mongoose.Schema.Types.ObjectId,

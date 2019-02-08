@@ -65,16 +65,16 @@
                 </thead>
                 <tbody>
                     {{#each events}}
-                        <tr id="event" scope="row" data-toggle="modal" data-target="#myModal{{_id}}">
-                            <td>{{_id}}</td>
+                        <tr scope="row">
+                            <td class="event"  data-toggle="modal" data-target="#myModal{{_id}}">{{_id}}</td>
                             {{#if full}}
-                                <th>{{name}}</th>
+                                <th class="event"  data-toggle="modal" data-target="#myModal{{_id}}">{{name}}</th>
                             {{else}}
-                                <th id="notFull">{{name}}</th>
+                                <th class="event"  data-toggle="modal" data-target="#myModal{{_id}}" id="notFull">{{name}}</th>
                             {{/if}}
-                            <td>{{creator}}</td>
-                            <td>{{date}}</td>
-                            <td>{{jobPosition}}</td>
+                            <td class="event"  data-toggle="modal" data-target="#myModal{{_id}}">{{creator}}</td>
+                            <td class="event"  data-toggle="modal" data-target="#myModal{{_id}}">{{date}}</td>
+                            <td class="event"  data-toggle="modal" data-target="#myModal{{_id}}">{{jobPosition}}</td>
                             <td>
                                 <form method="post" action="/admin/home/upcomingEventsNotesForm">    
                                     <input name="eventId" value="{{_id}}" hidden>

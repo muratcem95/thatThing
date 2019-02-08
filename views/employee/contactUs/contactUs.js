@@ -6,7 +6,3 @@ socket.on('connect', function() {
 socket.on('disconnect', function() {
     console.log('Disconnected from server.');
 });
-
-$("#startSearch").click(function() {
-    $("#searchResult").toggle();
-});

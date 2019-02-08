@@ -38,25 +38,37 @@
             <table class="table table-hover text-center" id="example" class="display">
                 <thead>
                     <tr>
+                        <th scope="col">Rate</th>
                         <th scope="col">Id</th>
                         <th scope="col">Name</th>
                         <th scope="col">Interested in</th>
                         <th scope="col">Email</th>
                         <th scope="col">Phone</th>
                         <th scope="col">City</th>
+                        <th scope="col">Postal code</th>
                         <th scope="col">Notes</th>
                         <th scope="col">Favourites</th>
                     </tr>
                 </thead>
                 <tbody>
                     {{#each employees}}
-                        <tr id="employee" scope="row" data-toggle="modal" data-target="#myModal{{_id}}">
-                            <td>{{_creator._id}}</td>
-                            <td>{{name}}</td>
-                            <td>{{interestedIn}}</td>
-                            <td>{{_creator.email}}</td>
-                            <td>{{phone}}</td>
-                            <td>{{city}}</td>
+                        <tr scope="row">
+                            <td>
+                                <form method="post" action="/admin/searchEmployeesRateForm">    
+                                    <input id="employeeId" name="employeeId" value="{{_id}}" hidden>
+                                    <div class="form-group">                    
+                                        <textarea class="form-control form-control-sm" name="rate">{{rate}}</textarea>   
+                                    </div>    
+                                    <button type="submit" class="btn btn-success btn-sm">Update</button>    
+                                </form> 
+                            </td>
+                            <td class="employee"  data-toggle="modal" data-target="#myModal{{_id}}">{{_creator._id}}</td>
+                            <td class="employee"  data-toggle="modal" data-target="#myModal{{_id}}">{{name}}</td>
+                            <td class="employee"  data-toggle="modal" data-target="#myModal{{_id}}">{{interestedIn}}</td>
+                            <td class="employee"  data-toggle="modal" data-target="#myModal{{_id}}">{{_creator.email}}</td>
+                            <td class="employee"  data-toggle="modal" data-target="#myModal{{_id}}">{{phone}}</td>
+                            <td class="employee"  data-toggle="modal" data-target="#myModal{{_id}}">{{city}}</td>
+                            <td class="employee"  data-toggle="modal" data-target="#myModal{{_id}}">{{postalCode}}</td>
                             <td>
                                 <form method="post" action="/admin/searchEmployeesNotesForm">    
                                     <input id="employeeId" name="employeeId" value="{{_id}}" hidden>
@@ -66,12 +78,16 @@
                                     <button type="submit" class="btn btn-success btn-sm">Update</button>    
                                 </form> 
                             </td>
-                            <td>
-                                <form method="post" action="/admin/searchEmployeesFavouritesForm">    
-                                    <input id="employeeId" name="employeeDetailId" value="{{_id}}" hidden>
-                                    <button type="submit" class="btn btn-success btn-sm">Add to Favourites</button>    
-                                </form>
-                            </td>
+                            {{#if favourited}}
+                                <td><button type="submit" class="btn btn-success btn-sm" disabled>Favourited</button></td>
+                            {{else}}
+                                <td>
+                                    <form method="post" action="/admin/searchEmployeesFavouritesForm">    
+                                        <input id="employeeId" name="employeeDetailId" value="{{_id}}" hidden>
+                                        <button type="submit" class="btn btn-success btn-sm">Add to Favourites</button>   
+                                    </form>
+                                </td>
+                            {{/if}}
                         </tr>
                         <!--         Modal -->
                         <div class="modal fade" id="myModal{{_id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">

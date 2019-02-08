@@ -50,7 +50,7 @@ app.use(express.static(viewsPath));
 app.use(session({
     cookieName: 'session',
     secret: 'eg[isfd-8yF9-7w2315df{}+Ijsli;;to8',
-    duration: 30 * 60 * 1000,
+    duration: 60 * 60 * 1000,
     activeDuration: 5 * 60 * 1000,
     httpOnly: true,
     secure: true,
@@ -69,12 +69,16 @@ app.use(bodyParser.json());
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 //MAIN PAGE AND BUSINESS SIGNUP FORM
 app.get('/mainPage', (req, res) => {
-    res.render('mainPage/mainPage.html');
+    Event.find().then((events) => {
+        var eventsLength = events.length;
+        
+        res.render('mainPage/mainPage.html', {eventsLength});
+    }).catch((e) => res.send(e));
 });
 
 app.post('/mainPageBusinessForm', (req, res) => {
     var mailOptions = {
-        from: req.body.email,
+        from: 'muratcem95@gmail.com',
         to: 'muratcem95@gmail.com',
         subject: 'A business is interest to work with me :)!',
         text: 'Business name: '+req.body.name+'; BRN: '+req.body.brn+'; Email: '+req.body.email+'; Phone: '+req.body.phone+'; Address: '+req.body.address+'. Sign up date: '+moment()
@@ -310,6 +314,20 @@ app.get('/admin/searchEmployees', authenticateAdmin, (req, res) => {
     EmployeeDetail.find().populate('_creator').then((employees) => res.render('admin/searchEmployees/searchEmployees.html', {employees})).catch((e) => res.send(e));
 });
 
+app.post('/admin/searchEmployeesRateForm', authenticateAdmin, (req, res) => {
+    var sessAdmin = req.session.admin;    
+    
+    EmployeeDetail.findByIdAndUpdate({
+        _id: req.body.employeeId
+    }, { 
+        $set: { 
+            rate: req.body.rate
+        }
+    }, {
+        new: true
+    }).then(() => res.redirect('/admin/searchEmployees')).catch((e) => res.send(e));
+});
+
 app.post('/admin/searchEmployeesNotesForm', authenticateAdmin, (req, res) => {
     var sessAdmin = req.session.admin;    
     
@@ -327,10 +345,20 @@ app.post('/admin/searchEmployeesNotesForm', authenticateAdmin, (req, res) => {
 app.post('/admin/searchEmployeesFavouritesForm', authenticateAdmin, (req, res) => {
     var sessAdmin = req.session.admin;    
     
-    var employeeFavourite = new EmployeeFavourite({
-        _employee: req.body.employeeDetailId
-    });
-    employeeFavourite.save().then(() => res.redirect('/admin/searchEmployees')).catch((e) => res.send(e));
+    EmployeeDetail.findByIdAndUpdate({
+        _id: req.body.employeeDetailId
+    }, {
+        $set: {
+            favourited: true
+        }
+    }, {
+        new: true
+    }).then(() => {
+        var employeeFavourite = new EmployeeFavourite({
+            _employee: req.body.employeeDetailId
+        });
+        employeeFavourite.save().then(() => res.redirect('/admin/searchEmployees')).catch((e) => res.send(e));
+    }).catch((e) => res.send(e));
 });
 
 app.get('/admin/favourites', authenticateAdmin, (req, res) => {
@@ -348,6 +376,20 @@ app.get('/admin/favourites', authenticateAdmin, (req, res) => {
     }).catch((e) => res.send(e));
 });
 
+app.post('/admin/favouritesRateForm', authenticateAdmin, (req, res) => {
+    var sessAdmin = req.session.admin;    
+    
+    EmployeeDetail.findByIdAndUpdate({
+        _id: req.body.employeeId
+    }, { 
+        $set: { 
+            rate: req.body.rate
+        }
+    }, {
+        new: true
+    }).then(() => res.redirect('/admin/favourites')).catch((e) => res.send(e));
+});
+
 app.post('/admin/favouritesNotesForm', authenticateAdmin, (req, res) => {
     var sessAdmin = req.session.admin;    
     
@@ -363,9 +405,19 @@ app.post('/admin/favouritesNotesForm', authenticateAdmin, (req, res) => {
 });
 
 app.post('/admin/favouritesDeleteForm', authenticateAdmin, (req, res) => {
-    var sessAdmin = req.session.admin;    
+    var sessAdmin = req.session.admin;  
     
-    EmployeeFavourite.findByIdAndDelete({ _id: req.body.employeeId }).then(() => res.redirect('/admin/favourites')).catch((e) => res.send(e));
+    EmployeeDetail.findByIdAndUpdate({
+        _id: req.body.employeeDetailId
+    }, {
+        $set: {
+            favourited: false
+        }
+    }, {
+        new: true
+    }).then(() => {
+        EmployeeFavourite.findByIdAndDelete({ _id: req.body.employeeId }).then(() => res.redirect('/admin/favourites')).catch((e) => res.send(e));
+    }).catch((e) => res.send(e));
 });
 
 
@@ -386,7 +438,7 @@ app.post('/employeeSignUp', (req, res) => {
         employee.generateAuthToken();
         
         var mailOptions = {
-            from: req.body.email,
+            from: 'muratcem95@gmail.com',
             to: 'muratcem95@gmail.com',
             subject: 'An employee has just signed up! :)',
             text: 'Employee email: '+req.body.employeeSignUpEmail
@@ -400,7 +452,7 @@ app.post('/employeeSignUp', (req, res) => {
             }
         });
         
-        res.redirect('/employee/home/upcomingEvents');
+        res.redirect('/employee/myAccount/myAccount.html');
     }).catch((e) => res.send(e));
 });
 
@@ -687,19 +739,20 @@ app.get('/employee/searchJobs', (req, res) => {
     }).sort('date').then((events) => {
         EmployeeInterest.find({_employee: sessEmployee._id}).populate('_event').then((empInt) => {
             
-            for(var i=0; i<empInt.length; i++) {
-                events.push(empInt[i]._event);
+            var newEvents = JSON.stringify(events);
+            var newNewEvents = JSON.parse(newEvents);
+            
+            var empIntArr = [];
+            
+            for (var i=0; i<empInt.length; i++) {
+                empIntArr.push(empInt[i]._event);
             };
             
-//            for(var i=0; i<empInt.length; i++) {
-//                for(var j=0; j<events.length; j++) {
-//                    if(empInt[i]._event === events[j]._id) {
-//                        events.splice(i, 1);
-//                    };
-//                };
-//            };
-                   
-            res.render('employee/searchJobs/searchJobs.html', {sessEmployee, events});
+            var newEmpIntArr = JSON.stringify(empIntArr);
+            var newNewEmpIntArr = JSON.parse(newEmpIntArr);
+            var result = _.differenceWith(newNewEvents, newNewEmpIntArr, _.isEqual);            
+            
+            res.render('employee/searchJobs/searchJobs.html', {sessEmployee, result});
         }).catch((e) => res.send(e));
     }).catch((e) => res.send(e));
 });
@@ -714,7 +767,7 @@ app.post('/employee/searchJobsInterest', (req, res) => {
     });
     employeeInterest.save().then(() => {
         var mailOptions = {
-            from: sessEmployee.email,
+            from: 'muratcem95@gmail.com',
             to: 'muratcem95@gmail.com',
             subject: 'Interested in a job',
             text: 'Employee Id: '+sessEmployee._id+';'+'Event Id: '+req.body.eventId
@@ -730,6 +783,33 @@ app.post('/employee/searchJobsInterest', (req, res) => {
         
         res.redirect('/employee/searchJobs');
     }).catch((e) => res.send(e));
+});
+
+app.get('/employee/contactUs', (req, res) => {
+    var sessEmployee = req.session.employee; 
+    
+    Employee.findById({_id: sessEmployee._id}).then((employee) => res.render('employee/contactUs/contactUs.html', {employee})).catch((e) => res.send(e));
+});
+
+app.post('employee/contactUsForm', (req, res) => {
+    var sessEmployee = req.session.employee;
+    
+    var mailOptions = {
+        from: 'muratcem95@gmail.com',
+        to: 'muratcem95@gmail.com',
+        subject: `Employee Contact Us: ${sessEmployee._id}`,
+        text: `Employee email: Message: ${req.body.message}`
+    };
+    
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.log(error);
+        } else {
+            console.log('Email sent: ' + info.response);
+        };
+    });
+    
+    res.redirect("employee/upcomingEvents");
 });
 
 

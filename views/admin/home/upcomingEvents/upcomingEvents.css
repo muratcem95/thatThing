@@ -1,4 +1,7 @@
-#event:hover {
+.nav {
+    margin-bottom: 40px;
+}
+.event:hover {
     cursor: pointer;
 }
 #notFull {

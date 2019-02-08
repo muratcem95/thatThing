@@ -1,3 +1,10 @@
+#searchResult {
+    display: none;
+    margin: 0;
+}
+#info {
+    font-size: 120%;
+}
 .jumbotron {
     background-color: #94F3D3;
 }
@@ -6,8 +13,15 @@
     color: whitesmoke;
     margin-bottom: 0;
 }
-.col {
+.block {
     border: 3px solid grey;
     border-radius: 10px;
     margin-bottom: 40px;
+    padding: 20px;
+}
+#left {
+    float: left;
+}
+#right {
+    float: right;
 }
